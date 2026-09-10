@@ -50,12 +50,13 @@ jobs:
       - run: pip install --require-hashes -r ../requirements.lock && pip install --no-deps -e ..
       - run: npx playwright install --with-deps chromium
       - name: Real-backend browser workflows
+        working-directory: .
         run: |
-          mkdir -p ../outputs
-          repopilot serve > ../outputs/ci-api.log 2>&1 &
+          mkdir -p outputs
+          repopilot serve > outputs/ci-api.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid"' EXIT
-          npm run test:e2e
+          npm --prefix frontend run test:e2e
       - uses: actions/upload-artifact@v4
         if: always()
         with:
