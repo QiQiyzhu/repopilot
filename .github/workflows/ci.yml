@@ -67,6 +67,32 @@ jobs:
             frontend/test-results/
   containers:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - run: docker compose build
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build the deployable images
+        run: docker compose --project-name repopilot-ci build
+      - name: Start containers and verify the published application
+        run: |
+          mkdir -p outputs/container
+          cleanup() {
+            docker compose --project-name repopilot-ci ps --all --format json > outputs/container/compose-status.json 2>&1 || true
+            docker compose --project-name repopilot-ci logs --no-color --timestamps > outputs/container/compose.log 2>&1 || true
+            docker compose --project-name repopilot-ci down --volumes --remove-orphans > outputs/container/cleanup.log 2>&1
+          }
+          trap cleanup EXIT
+          docker compose --project-name repopilot-ci up --detach --wait --wait-timeout 100 > outputs/container/startup.log 2>&1
+          python scripts/container_smoke.py
+          docker compose --project-name repopilot-ci restart backend > outputs/container/restart.log 2>&1
+          python scripts/container_smoke.py --resume
+      - name: Cleanup if the preceding shell was interrupted
+        if: always()
+        run: docker compose --project-name repopilot-ci down --volumes --remove-orphans
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: container-runtime-evidence
+          path: outputs/container/
