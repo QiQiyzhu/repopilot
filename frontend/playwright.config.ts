@@ -11,13 +11,13 @@ export default defineConfig({
   use: {
     baseURL: "http://127.0.0.1:5174",
     browserName: "chromium",
-    channel: "msedge",
+    channel: process.env.PLAYWRIGHT_CHANNEL || (process.platform === "win32" ? "msedge" : undefined),
     viewport: { width: 1440, height: 1000 },
     screenshot: "only-on-failure",
   },
   webServer: {
     command: "npm run dev",
     url: "http://127.0.0.1:5174",
-    reuseExistingServer: true,
+    reuseExistingServer: !process.env.CI,
   },
 });

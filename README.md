@@ -1,5 +1,7 @@
 # RepoPilot
 
+[![Evidence checks](https://github.com/QiQiyzhu/repopilot/actions/workflows/ci.yml/badge.svg)](https://github.com/QiQiyzhu/repopilot/actions/workflows/ci.yml) · [A–T interview dossier](docs/interview-dossier.md) · [First verified Linux CI](https://github.com/QiQiyzhu/repopilot/actions/runs/34442379354)
+
 **A production-oriented coding agent harness and evaluation lab.** Submit a Git task, inspect the actual tool trace, and accept a change only when executable evidence passes. Python 3.12 · FastAPI · React · SQLite · MCP.
 
 [Watch the 30-second local demonstration](docs/assets/demo.webm) · [Inspect the recorded MCP trace](docs/evidence/mcp-trace.json) · [Read the interview guide](docs/interview-guide.md)
