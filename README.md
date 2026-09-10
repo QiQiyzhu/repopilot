@@ -45,7 +45,7 @@ flowchart TD
 | Experiment | Observed result | What it means |
 |---|---|---|
 | Backend checks | **93 pass, 1 Windows privilege skip** | Lifecycle, safety, context, provider, MCP, API and negative-control contracts; [latest local record](docs/evidence/deepseek-validation.json) |
-| Frontend checks | **4 unit + 6 real-backend browser workflows pass** | UI and execution evidence agree |
+| Frontend checks | **4 unit + 7 browser checks pass** | Six real-backend workflows plus one intercepted DeepSeek submission contract; no paid CI requests |
 | Docker Compose runtime | **Startup + backend restart pass** | Actual task/verification/diff/SSE through Nginx on 8080; [raw evidence](docs/container-runtime.md) |
 | ARC task contracts | **36 / 36** positive/negative controls validated | Tasks have executable discriminating acceptance criteria |
 | Add-test adequacy | **6 / 6** supplied incorrect behaviors rejected | Reference tests detect the intended mutation |
@@ -120,6 +120,8 @@ python -m repopilot.evaluation ablate-fixture
 The benchmark always materializes commit **`b17f4c24cf95a02d3197ec493026b6f23c8f2c3e`**; it never mutates the user's checkout. To submit your own repository through the UI, set `REPOPILOT_REPO_ROOT` to its containing directory before starting the backend. The demo repository must also be inside that root. Uncommitted source changes are intentionally excluded.
 
 For real-provider work, use the [DeepSeek setup and bounded probe](docs/real-model-setup.md): set `DEEPSEEK_API_KEY`, `DEEPSEEK_MODEL` and `REPOPILOT_PROVIDER_FLAVOR=deepseek` in the server environment. `provider-check` makes zero network calls; `provider-smoke --execute` makes at most one 256-output-token request and executes no tools. The existing run selector remains `openai` for compatibility, while the explicit flavor selects DeepSeek. Keys never enter the frontend. Missing credentials, truncated/refused output and invalid usage fail visibly, with no Fake fallback. A smoke receipt is not a coding benchmark.
+
+In the application, open **New task → Model provider → DeepSeek（服务端配置）**. The form displays the configured server model, blocks remote submission until DeepSeek configuration is present, and starts with **6 calls, zero retries, 16,000 total tokens and 180 seconds**. Advanced settings can lower those limits. Selecting a provider makes no model request; submitting the task does. The two demo buttons remain explicit zero-cloud-call fixture executions. Configuration readiness checks do not verify a key with the remote service.
 
 ```sh
 # This is a paid API operation: run only when you choose to authorize it.

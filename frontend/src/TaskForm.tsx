@@ -27,9 +27,26 @@ export function TaskForm({
     [timeout, setTimeout] = useState(120),
     [repairs, setRepairs] = useState(2),
     [tokens, setTokens] = useState(6000),
+    [totalTokens, setTotalTokens] = useState(40000),
     [acceptance, setAcceptance] = useState("");
+  const remoteReady =
+    health?.real_provider_configured &&
+    health.real_provider?.flavor === "deepseek";
+  const remoteBlocked = provider === "openai" && !remoteReady;
+  function selectProvider(value: string) {
+    setProvider(value);
+    setMaxSteps(value === "openai" ? 6 : 24);
+    setTimeout(value === "openai" ? 180 : 120);
+    setRepairs(value === "openai" ? 0 : 2);
+    setTokens(value === "openai" ? 1800 : 6000);
+    setTotalTokens(value === "openai" ? 16000 : 40000);
+  }
   function submit(event: React.FormEvent) {
     event.preventDefault();
+    if (remoteBlocked) {
+      onError("DeepSeek is not configured in the backend environment.");
+      return;
+    }
     try {
       const criteria = acceptance.trim()
         ? JSON.parse(acceptance)
@@ -49,6 +66,8 @@ export function TaskForm({
           timeout_seconds: timeout,
           max_repairs: repairs,
           context_tokens: tokens,
+          max_tokens: totalTokens,
+          provider_retries: provider === "openai" ? 0 : 2,
         },
         acceptance: criteria,
       });
@@ -112,12 +131,12 @@ export function TaskForm({
             Model provider
             <select
               value={provider}
-              onChange={(e) => setProvider(e.target.value)}
+              onChange={(e) => selectProvider(e.target.value)}
             >
               <option value="fake">
-                Deterministic fake · included fixture only
+                演示（零云端调用）· included fixture only
               </option>
-              <option value="openai">Configured real provider</option>
+              <option value="openai">DeepSeek（服务端配置）</option>
               <option value="replay">Replay previous actions</option>
             </select>
           </label>
@@ -168,12 +187,34 @@ export function TaskForm({
             />
           </label>
         )}
-        {provider === "openai" && !health?.real_provider_configured && (
-          <p className="inline-warning">
-            A real provider is not configured. Set DEEPSEEK_API_KEY,
-            DEEPSEEK_MODEL and REPOPILOT_PROVIDER_FLAVOR=deepseek in the backend
-            environment, then start the server from that environment.
-          </p>
+        {provider === "openai" && (
+          <div
+            className={remoteReady ? "provider-readiness" : "inline-warning"}
+            role="status"
+          >
+            {remoteReady ? (
+              <>
+                <strong>
+                  DeepSeek configured · {health?.real_provider?.model}
+                </strong>
+                <p>
+                  服务端密钥已配置。提交任务才会调用云端；最多 6 次模型调用、0
+                  次重试、16,000 个总 tokens、180
+                  秒。下方预算可以进一步降低。观测到用量后停止，不是预付费额度锁。
+                </p>
+              </>
+            ) : (
+              <>
+                <strong>DeepSeek is not configured.</strong>
+                <p>
+                  Set DEEPSEEK_API_KEY, DEEPSEEK_MODEL and
+                  REPOPILOT_PROVIDER_FLAVOR=deepseek in the backend environment,
+                  then start the server from that environment and refresh this
+                  page. Keys are never entered in this browser.
+                </p>
+              </>
+            )}
+          </div>
         )}
         <details className="advanced">
           <summary>Budget and executable acceptance criteria</summary>
@@ -183,7 +224,7 @@ export function TaskForm({
               <input
                 type="number"
                 min={1}
-                max={100}
+                max={provider === "openai" ? 6 : 100}
                 value={maxSteps}
                 onChange={(e) => setMaxSteps(Number(e.target.value))}
               />
@@ -193,7 +234,7 @@ export function TaskForm({
               <input
                 type="number"
                 min={1}
-                max={1800}
+                max={provider === "openai" ? 180 : 1800}
                 value={timeout}
                 onChange={(e) => setTimeout(Number(e.target.value))}
               />
@@ -203,9 +244,19 @@ export function TaskForm({
               <input
                 type="number"
                 min={0}
-                max={5}
+                max={provider === "openai" ? 0 : 5}
                 value={repairs}
                 onChange={(e) => setRepairs(Number(e.target.value))}
+              />
+            </label>
+            <label>
+              Total token budget
+              <input
+                type="number"
+                min={64}
+                max={provider === "openai" ? 16000 : 1000000}
+                value={totalTokens}
+                onChange={(e) => setTotalTokens(Number(e.target.value))}
               />
             </label>
             <label>
@@ -213,7 +264,7 @@ export function TaskForm({
               <input
                 type="number"
                 min={64}
-                max={32000}
+                max={provider === "openai" ? 1800 : 32000}
                 value={tokens}
                 onChange={(e) => setTokens(Number(e.target.value))}
               />
@@ -257,7 +308,13 @@ export function TaskForm({
           <button
             className="primary"
             type="submit"
-            disabled={busy || !repository.trim() || task.trim().length < 3}
+            disabled={
+              busy ||
+              !health ||
+              remoteBlocked ||
+              !repository.trim() ||
+              task.trim().length < 3
+            }
           >
             <Play size={16} />
             {busy ? "Creating workspace…" : "Run task"}

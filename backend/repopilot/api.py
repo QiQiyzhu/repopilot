@@ -82,12 +82,18 @@ def create_app(data: Path | None = None, repository_root: Path | None = None) ->
 
     @app.get("/health")
     async def health() -> dict[str, Any]:
+        remote = configuration_check()
         return {
             "status": "ok",
             "version": "0.1.0",
             "demo_repository": getattr(app.state, "demo_repository", None),
             "repository_root": str(repository_root.resolve()),
-            "real_provider_configured": configuration_check()["configured"],
+            "real_provider_configured": remote["configured"],
+            "real_provider": {
+                "configured": remote["configured"],
+                "flavor": remote.get("flavor"),
+                "model": remote.get("model"),
+            },
             "default_provider": "fake",
             "sandbox": "application-boundary; trusted-repository-code only",
         }

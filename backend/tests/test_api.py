@@ -76,3 +76,13 @@ def test_health_checks_real_configuration_without_disclosing_it(tmp_path, monkey
             "OPENAI_BASE_URL", "https://workspace.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
         )
         assert client.get("/health").json()["real_provider_configured"] is True
+        monkeypatch.setenv("REPOPILOT_PROVIDER_FLAVOR", "deepseek")
+        monkeypatch.setenv("DEEPSEEK_API_KEY", "private-deepseek-unit-key")
+        monkeypatch.setenv("DEEPSEEK_MODEL", "deepseek-flash")
+        monkeypatch.setenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
+        configured = client.get("/health")
+        assert configured.json()["real_provider"] == {
+            "configured": True, "flavor": "deepseek", "model": "deepseek-flash"
+        }
+        assert "private-deepseek-unit-key" not in configured.text
+        assert "api.deepseek.com" not in configured.text

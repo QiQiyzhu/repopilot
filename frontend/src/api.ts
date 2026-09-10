@@ -86,6 +86,11 @@ export interface Health {
   version: string;
   demo_repository: string;
   real_provider_configured: boolean;
+  real_provider?: {
+    configured: boolean;
+    flavor: string | null;
+    model: string | null;
+  };
   repository_root: string;
 }
 export interface Memory {

@@ -99,6 +99,8 @@ Provider protocol 解耦 Fake / Replay / OpenAI compatible HTTP 调用。当前�
 
 另外执行了一次真实 DeepSeek authored clamp 小任务：[完整脱敏 trace](evidence/deepseek-task.json)。四次模型调用自主复现失败、修改、复测、finish；独立 verifier 再次执行 3 项 pytest，并确认测试未改、只有 calculator.py 改动。实测 10,277 input / 323 output tokens、5.437 秒。它证明单个可信 fixture 的模型到执行再到验收链路可运行，不是 36 任务 benchmark，也不构成消融收益。具体配置与次数边界见 [real-model-setup.md](real-model-setup.md)。
 
+应用的 New task 也可直接选择 DeepSeek，health 只返回配置状态、flavor 与 model；未配置时禁用提交。远程表单显式提交 6 steps/calls、16,000 total tokens、180 秒及 0 retries，并允许进一步降低。切换选项不触发请求，密钥只在服务端。浏览器的配置摘要没有声称已验证远端密钥有效性；付费副作用从任务提交开始。
+
 ## H. Reliability 机制
 
 每任务有步骤、时间、token、修复次数和 provider retry 上限；最大并行任务为 2。子进程输出增量截断，超时终止进程树。取消传播到任务与进程；服务重启将未完成任务标记失败，retry 创建新的 task/workspace，保留原记录。
@@ -119,7 +121,7 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 | Actual DeepSeek authored task | 1 accepted / 4 model calls | 3 pytest pass，独立复验；输入 10,277 / 输出 323 tokens；单个可见测试 fixture |
 | Final API/MCP/archive targeted checks | 5 passed | 配置模块改动之后；后续 API annotation 检查 3 passed |
 | Frontend unit | 4 passed | API 边界、错误、真实空值等 |
-| Playwright real-backend | 6 passed | MCP demo、持久化、retry、approval approve/reject/cancel、失败、memory、mobile |
+| Playwright browser | 7 passed | 6 项真实后端流程，加 1 项截获 DeepSeek POST 的配置与预算契约；CI 不调用付费模型 |
 | Ruff / mypy | passed / 22 source files | backend/repopilot 与 scripts lint |
 | Typecheck / lint / build | passed | frontend |
 | npm audit | 0 vulnerabilities | 验证时实际结果，不代表永久安全 |
@@ -232,6 +234,6 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 - 实现 native tools 与真实 MCP stdio server/client，结合独立 Git snapshot、命令 allowlist、路径守卫、人工删除审批和实际 verifier；明确区分应用权限边界与 OS sandbox。
 - 围绕 ARC//SHIFT 固定提交设计 36 项独立 acceptance 合同，全部通过负例失败/参考修改成功验证，其中 6 项补测试任务拒绝指定 mutant；基线 92 项回归测试、类型检查和构建通过。
 - 实现带 provenance 和预算的代码上下文选择、严格版本隔离 memory 及五组 harness 配置，执行已知 fixture 对照并公开真实 LLM benchmark 未运行的边界。
-- 建立前后端验证与可审计演示，实际通过 4 项前端单元测试、6 项真实服务浏览器测试及 Linux Docker Compose 运行验收；通过 Nginx 代理验证 MCP 修复、可执行验收和重启后的任务持久化，保存原始 JSON 与容器日志。
+- 建立前后端验证与可审计演示，实际通过 4 项前端单元测试、7 项浏览器检查（6 项真实后端流程、1 项远程模型提交契约）及 Linux Docker Compose 运行验收；通过 Nginx 代理验证 MCP 修复、可执行验收和重启后的任务持久化，保存原始 JSON 与容器日志。
 
 使用前再次复验仓库对应提交。不要将“production-oriented”改成“已生产部署”，不要添加未测量的用户数、QPS、准确率提升或效率收益。

@@ -77,6 +77,20 @@
   line-height: 1.6;
   color: #234335;
 }
+.provider-readiness {
+  margin: 16px 0;
+  padding: 14px 16px;
+  border: 1px solid #cbe2d8;
+  border-radius: 8px;
+  background: #eef8f4;
+  color: #1c5a46;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.provider-readiness p {
+  margin: 5px 0 0;
+  color: #45685f;
+}
 .provider-breakdown {
   display: flex;
   gap: 50px;
