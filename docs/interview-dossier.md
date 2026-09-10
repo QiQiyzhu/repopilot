@@ -175,14 +175,14 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 | harness.py | 状态转移、permission gate、repair、usage、取消和真实完成判断 |
 | security.py | 路径解析、argv allowlist、流式输出、进程终止与脱敏 |
 | workspace.py | committed snapshot、归档守卫与原始工作树隔离 |
-| tools.py | patch 唯一性、换行保留、新文件 diff 和审批 |
+| capsule_sandbox.py | 只读三文件挂载、禁网、资源约束与取消时删除自有容器 |
 | providers.py | real / fake / replay 行为、失败、费用和 usage 来源 |
 | context.py | 词法排序、chunk provenance、预算选择及丢弃 |
 | verifier.py | 真实 command exit code + diff + skill checks |
 | mcp_client.py | ClientSession、initialize、stdio lifetime 与 transport |
-| store.py | WAL、短事务、事件 cursor 与 memory 版本过滤 |
+| capsule_eval.py | 冻结数据、逐调用账本、12行分母、异常后无损保留与独立验收 |
 
-以上路径均相对 `backend/repopilot/`。补充阅读 api.py 的 SSE 与 skills.py 的验证策略。
+以上路径均相对 `backend/repopilot/`。补充阅读 tools.py 的 patch、store.py 的持久化、api.py 的 SSE 与 skills.py 的验证策略。
 
 ## Q. 5 个必须读懂的 Frontend 文件
 
@@ -201,12 +201,12 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 1. **合法状态转换**：`if next_state not in TRANSITIONS[current]: raise ...`；为什么 FINISH 后不能悄悄再 EXECUTE？
 2. **路径守卫**：拒绝危险路径组成后 resolve，并验证结果相对于 workspace；resolve 前后的检查分别解决什么问题？
 3. **唯一 patch**：`count = text.count(old); if count != 1: fail`；为什么自动选择第一处匹配可能修改错误逻辑？
-4. **换行保留**：raw bytes 识别 CRLF，统一匹配后恢复原 newline；避免无关整文件 diff。
+4. **调用前记账**：先 reserve → flush/fsync，再发送 HTTP；正常返回追加 observed，失联保留 unknown 并停止后续调用，不能把账单未知当作 0。
 5. **参数化 SQL**：`db.execute('SELECT body FROM events WHERE task_id=? AND sequence>? ORDER BY sequence', (task_id, after))`。
 6. **事件增量**：保存全局 sequence，SSE 只发 cursor 之后事件，重连读 Last-Event-ID；前端允许重复刷新但不丢终态。
 7. **进程边界**：显式 argv / shell=False / stdin=DEVNULL / bounded stdout / timeout / terminate tree；解释 stdin 为什么影响 MCP。
 8. **Verifier 决定完成**：provider finish → execute acceptance → collect exit codes → succeeded 或 bounded repair；不是信任模型自报成功。
-9. **Memory 可信过滤**：repository + exact commit + valid + trusted + provenance；为什么没有跨版本自动推广？
+9. **执行与验收分离**：只向无网容器挂载候选代码、可见测试和固定 gateway；oracle 期望留在 controller，限长 JSON 输出由外部比较。只读 oracle 文件为什么仍会泄露答案？
 10. **实验正负对照**：negative setup → external check must fail → reference patch → same check must pass；为什么 reference 不应进入 provider context？
 
 ## S. 20 个面试追问题
@@ -228,16 +228,16 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 15. **36 个合同证明什么？** 能区分已设计负例与参考实现；不能证明通用任务覆盖或模型能力。
 16. **五组消融能证明架构越复杂越好吗？** 不能；当前样本只是 wiring 验证，真实实验未运行。
 17. **成本预算能绝对防止超支吗？** 不能撤销已发生远端请求，必须说明计费来源与检测边界。
-18. **最有价值的真实 bug 是什么？** MCP 协议 stdin 被 pytest 继承导致卡住，用 DEVNULL 修复并复验。
+18. **最有价值的真实 bug 是什么？** grading 超时曾覆盖 actor 行，汇总漏记已用调用；无网络注入复现后改为从 durable ledger 恢复每行用量。后续基础设施异常也要保留先前结果和完整分母。MCP stdin 阻塞是另一个可复述案例。
 19. **公开上线前首先做什么？** 强隔离、认证授权、tenant ownership、网络/secret 边界、可靠队列和资源限制。
 20. **AI 辅助代码如何证明自己理解？** 从失败 trace 定位、手写一个 gate/测试、解释边界并现场修改验证，坦诚 AI 辅助。
 
 ## T. 5 条基于真实结果的简历 Bullet 候选
 
-- 基于 Python 3.12、FastAPI、React 和 SQLite 构建代码任务 Agent harness，实现七态执行、限次修复、取消/超时及可重连 SSE trace；后端实际验证 93 项通过、1 项因 Windows 权限跳过，覆盖 DeepSeek payload、计费未知、失败分类和调用次数边界。
+- 基于 Python 3.12、FastAPI、React 和 SQLite 构建代码任务 Agent harness，实现七态执行、限次修复、取消/超时及 SSE trace；当前 Windows 后端实际 117 项通过、1 项权限跳过，新增 24 项冻结评估、用量恢复和隔离契约。
 - 实现 native tools 与真实 MCP stdio server/client，结合独立 Git snapshot、命令 allowlist、路径守卫、人工删除审批和实际 verifier；明确区分应用权限边界与 OS sandbox。
 - 围绕 ARC//SHIFT 固定提交设计 36 项独立 acceptance 合同，全部通过负例失败/参考修改成功验证，其中 6 项补测试任务拒绝指定 mutant；基线 92 项回归测试、类型检查和构建通过。
-- 实现带 provenance 和预算的代码上下文选择、严格版本隔离 memory 及五组 harness 配置，执行已知 fixture 对照并公开真实 LLM benchmark 未运行的边界。
+- 实现冻结的 6 任务/39 用例开发评估协议与 full/compact 上下文对照、Docker 候选执行和 controller 独立验收；Linux 零模型 controls 验证全部参考用例并拒绝 6 个错误实现，公开任务不包装为 held-out 泛化成绩，真实付费结果另行记录。
 - 建立前后端验证与可审计演示，实际通过 4 项前端单元测试、7 项浏览器检查（6 项真实后端流程、1 项远程模型提交契约）及 Linux Docker Compose 运行验收；通过 Nginx 代理验证 MCP 修复、可执行验收和重启后的任务持久化，保存原始 JSON 与容器日志。
 
 使用前再次复验仓库对应提交。不要将“production-oriented”改成“已生产部署”，不要添加未测量的用户数、QPS、准确率提升或效率收益。
