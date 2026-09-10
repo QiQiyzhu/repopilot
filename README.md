@@ -1,6 +1,6 @@
 # RepoPilot
 
-[![Evidence checks](https://github.com/QiQiyzhu/repopilot/actions/workflows/ci.yml/badge.svg)](https://github.com/QiQiyzhu/repopilot/actions/workflows/ci.yml) · [A–T interview dossier](docs/interview-dossier.md) · [First verified Linux CI](https://github.com/QiQiyzhu/repopilot/actions/runs/34442379354)
+[![Evidence checks](https://github.com/QiQiyzhu/repopilot/actions/workflows/ci.yml/badge.svg)](https://github.com/QiQiyzhu/repopilot/actions/workflows/ci.yml) · [A–T interview dossier](docs/interview-dossier.md) · [Verified fullstack Linux CI](https://github.com/QiQiyzhu/repopilot/actions/runs/34444225871)
 
 **A production-oriented coding agent harness and evaluation lab.** Submit a Git task, inspect the actual tool trace, and accept a change only when executable evidence passes. Python 3.12 · FastAPI · React · SQLite · MCP.
 

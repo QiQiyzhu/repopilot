@@ -122,7 +122,7 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 | npm audit | 0 vulnerabilities | 验证时实际结果，不代表永久安全 |
 | Pinned ARC regression | 92 tests + typecheck + build passed | 只读源提交的独立 archive |
 
-完整证据、命令和限制见 [verification.md](verification.md)。Docker 本地不可用，GitHub CI 等待发布后运行，不宣称已通过。
+完整证据、命令和限制见 [verification.md](verification.md)。Docker 本地不可用；实际 Linux [CI run 34444225871](https://github.com/QiQiyzhu/repopilot/actions/runs/34444225871) 已通过后端、前端和 Docker 镜像构建，包含 6 项真实服务浏览器流程。构建镜像不等于生产容器运行验收。
 
 ## K. RAG Benchmark 真实结果
 
@@ -156,7 +156,7 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 
 ## O. 尚未完成的问题
 
-真实付费 LLM benchmark 未运行；semantic RAG 和 retrieval 指标未实现；生产多租户 sandbox 未实现；Docker/远端 CI 尚未验证；没有并发压力和统计性能结论；SQLite 没有 schema migration / event retention；无完整 prompt release registry；Windows symlink 安全测试因权限 skip。真实 API 执行需要用户提供合法环境配置并授权费用。这些是简历边界，不能靠措辞抹掉。
+真实付费 LLM benchmark 未运行；semantic RAG 和 retrieval 指标未实现；生产多租户 sandbox 未实现；Docker 运行验收未做（远端镜像构建和 CI 已通过）；没有并发压力和统计性能结论；SQLite 没有 schema migration / event retention；无完整 prompt release registry；Windows symlink 安全测试因权限 skip。真实 API 执行需要用户提供合法环境配置并授权费用。这些是简历边界，不能靠措辞抹掉。
 
 ## P. 10 个必须逐行读懂的 Backend 文件
 
