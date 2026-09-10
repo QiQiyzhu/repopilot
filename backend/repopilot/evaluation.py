@@ -101,6 +101,11 @@ async def acceptance(workspace: Path, task: dict[str, Any], data: Path) -> dict[
     }
 
 
+def contract_rejected(result: dict[str, Any]) -> bool:
+    """The evaluator uses exit 1 for rejection; timeout/signal exit is not a control pass."""
+    return result.get("passed") is False and result.get("exit_code") == 1
+
+
 async def validate_contracts(repository: Path, output: Path, data: Path) -> dict[str, Any]:
     manifest = json.loads((ROOT / "evaluation/tasks/arc-shift.json").read_text(encoding="utf-8"))
     data.mkdir(parents=True, exist_ok=True)
@@ -140,9 +145,9 @@ async def validate_contracts(repository: Path, output: Path, data: Path) -> dict
                 apply_reference(workspace, task["adequacy_mutation"])
                 adequacy = await acceptance(workspace, task, data)
             passed = (
-                not before["passed"]
+                contract_rejected(before)
                 and after["passed"]
-                and (adequacy is None or not adequacy["passed"])
+                and (adequacy is None or contract_rejected(adequacy))
             )
             row = {
                 "task_id": task["task_id"],

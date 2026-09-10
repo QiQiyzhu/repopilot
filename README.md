@@ -4,6 +4,8 @@
 
 **A production-oriented coding agent harness and evaluation lab.** Submit a Git task, inspect the actual tool trace, and accept a change only when executable evidence passes. Python 3.12 · FastAPI · React · SQLite · MCP.
 
+**Tests are green. Is the task complete?** Two authored regression tests each pass the full **93-test** ARC suite. An independent mutation check rejects the one that misses a diagonal-distance regression. [Inspect and reproduce the decision case](docs/decision-case-study.md) · [30-second / 3-minute / 8-minute interview walkthrough](docs/interview-deep-dive.md). No model provider is called; this is executable verification evidence, not an LLM score.
+
 [Watch the 30-second local demonstration](docs/assets/demo.webm) · [Inspect the recorded MCP trace](docs/evidence/mcp-trace.json) · [Read the interview guide](docs/interview-guide.md)
 
 ![A real task diff and verification evidence](docs/assets/diff.png)
@@ -42,11 +44,12 @@ flowchart TD
 
 | Experiment | Observed result | What it means |
 |---|---|---|
-| Backend checks | **57 pass, 1 Windows privilege skip** | Lifecycle, safety, context, provider, MCP and API contracts |
+| Backend checks | **59 pass, 1 Windows privilege skip** | Lifecycle, safety, context, provider, MCP, API and negative-control contracts; [latest local record](docs/evidence/decision-validation.json) |
 | Frontend checks | **4 unit + 6 real-backend browser workflows pass** | UI and execution evidence agree |
 | Docker Compose runtime | **Startup + backend restart pass** | Actual task/verification/diff/SSE through Nginx on 8080; [raw evidence](docs/container-runtime.md) |
 | ARC task contracts | **36 / 36** positive/negative controls validated | Tasks have executable discriminating acceptance criteria |
 | Add-test adequacy | **6 / 6** supplied incorrect behaviors rejected | Reference tests detect the intended mutation |
+| Green-tests counterexample | **Both 93-test runs green; one candidate rejected** | Independent candidate-only mutation distinguishes test adequacy from suite success; [raw case](evaluation/results/decision-case.json) |
 | Pinned ARC baseline | **92 tests**, typecheck and build pass | The archived evaluation baseline is viable |
 | Five harness configurations | **5 / 5** known-fixture repairs pass external pytest | Configuration plumbing works; this is not model performance |
 | Real-provider 36-task ablation | **Not run** | No paid API was invoked; success rates and token comparisons are unknown |

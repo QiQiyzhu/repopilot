@@ -11,7 +11,7 @@ import shutil
 from pathlib import Path
 from uuid import uuid4
 
-from repopilot.evaluation import PROFILES, ROOT, acceptance, apply_reference
+from repopilot.evaluation import PROFILES, ROOT, acceptance, apply_reference, contract_rejected
 from repopilot.harness import Harness
 from repopilot.models import Acceptance, Budget, Check, TaskRequest
 from repopilot.security import run_process, validate_command
@@ -130,8 +130,8 @@ async def main(args):
                     try:
                         apply_reference(workspace, mutation)
                         killed = await acceptance(workspace, task, args.data)
-                        external["mutation_killed"] = not killed["passed"]
-                        external["passed"] &= not killed["passed"]
+                        external["mutation_killed"] = contract_rejected(killed)
+                        external["passed"] &= external["mutation_killed"]
                     finally:
                         path.write_bytes(original)
                 for check in request.acceptance.checks:

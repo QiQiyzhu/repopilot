@@ -1,0 +1,24 @@
+{
+  "evidence_type": "actual-local-process-results",
+  "backend": {
+    "total": 60,
+    "passed": 59,
+    "failed": 0,
+    "skipped": [
+      {
+        "name": "test_symlinks_rejected",
+        "reason": "Host disallows symlink creation without elevation"
+      }
+    ]
+  },
+  "contracts": {
+    "validated": 36,
+    "total": 36,
+    "mutations_rejected": 6
+  },
+  "case": "../../evaluation/results/decision-case.json",
+  "python": "3.12.14",
+  "platform": "Windows",
+  "frontend": "unchanged; will be covered by the push CI",
+  "real_model_runs": 0
+}

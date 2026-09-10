@@ -1,10 +1,12 @@
 # Verification record
 
-The checked-in [validation JSON](evidence/validation.json) is generated from actual pytest JUnit and Playwright reports. The latest backend suite has **57 passing cases and one explicitly skipped Windows symlink privilege test**. Four frontend request/metric unit tests and six real-backend browser workflows pass. Ruff, mypy, frontend typecheck/lint/build also pass.
+The original [validation JSON](evidence/validation.json) is generated from actual pytest JUnit and Playwright reports. The decision-case upgrade adds two checks: the latest local backend suite has **59 passing cases and one explicitly skipped Windows symlink privilege test**; [current record](evidence/decision-validation.json). Ruff and mypy pass. The unchanged frontend previously passed four unit tests, six real-backend browser workflows, typecheck/lint/build and the published Linux CI; each new push reruns that suite.
 
 The browser suite covers MCP execution, persisted task reload, diff, verifier, context, retry, memory invalidation, evaluation labels, missing-provider failure, mobile layout and approval/rejection/cancellation of a fixture deletion. The video and screenshots are captures of the running local application, not UI mockups. The updated diff preserves CRLF and changes only the repaired comparison.
 
 The pinned ARC baseline independently passes 92 regression tests, typecheck and build. All 36 task contracts pass positive and negative controls; the six add-test reference cases also reject their intended mutation. The five-profile deterministic harness ablation uses one known fixture per profile and must not be read as an LLM success-rate comparison.
+
+The [new completion counterexample](decision-case-study.md) actually runs two authored candidate tests through the existing verifier: both pass **93** regression tests, yet only the diagonal reference rejects the known distance mutation. Source hashes, process results, exact patches and restored-implementation evidence are retained in [decision-case.json](../evaluation/results/decision-case.json). No provider is called. A real timed-out subprocess also verifies that infrastructure timeout cannot count as a successful negative control. After tightening the shared rejection predicate, all **36** contract controls and **6** mutation controls were rerun and passed. The optional paid-model runner uses the same predicate but was not invoked.
 
 Dependency audit on the frontend reports zero known vulnerabilities at the recorded check. Vitest was moved to 4.1.11 after inspection of the [official advisory](https://github.com/advisories/GHSA-82fw-gwwq-j7x9). This does not guarantee that all dependencies are vulnerability-free.
 

@@ -22,8 +22,11 @@ jobs:
       - name: Checkout the pinned evaluation target
         run: git clone https://github.com/QiQiyzhu/arc-shift.git /tmp/arc-shift
       - run: python -m repopilot.evaluation validate-contracts /tmp/arc-shift --output outputs/contracts.json
+      - name: Green-tests counterexample and discriminating reference
+        run: python -m repopilot.decision_case /tmp/arc-shift --trust-code --output outputs/decision-case.json
       - run: python -m repopilot.evaluation ablate-fixture --output outputs/ablation.json
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: harness-evidence
           path: outputs/

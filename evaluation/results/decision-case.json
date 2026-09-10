@@ -1,0 +1,191 @@
+{
+  "id": "repopilot-green-tests-counterexample",
+  "title": "Tests passed. Did the requested regression test actually protect the behavior?",
+  "recorded_at": "2026-09-10T09:57:09.569119+00:00",
+  "case_proven": true,
+  "evidence_type": "authored-candidate-and-reference-process-controls",
+  "is_model_benchmark": false,
+  "provider_invocations": 0,
+  "fake_provider_invocations": 0,
+  "real_model_runs": 0,
+  "model_performance": null,
+  "decision_prompt": "Both candidates pass the entire regression suite. Accept both, or require evidence that each new test rejects the specified defect?",
+  "task_id": "arc-017-test-distance",
+  "repository": "https://github.com/QiQiyzhu/arc-shift",
+  "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+  "harness_commit_at_execution": "6d6d6668f8e26c553d73bbcefb8c43ea858e216c",
+  "harness_worktree_dirty_at_execution": true,
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Windows"
+  },
+  "source_hashes": {
+    "task_manifest_sha256": "387dd3defa056645fddabe92c46b55db0cfc379471bddccc3090f9591e213f1b",
+    "runner_sha256": "8f31a88765bc928c97a013b454a9e0aca2fe8ade2d8526b16374aeac75b5433d",
+    "independent_evaluator_sha256": "f3d1917b019cefe0280f7965d1490544a6d06ba22ca02b52cbced51117e805c7",
+    "evaluation_module_sha256": "d734c234e0293bdb23a946ab92177387e8116bfb6de9cc67a7a8029127076603",
+    "verifier_module_sha256": "53f84ec92fe221a563490a9e7db0e0cf7c5b8d78cc58af424327232ff8ff241f",
+    "implementation_before_sha256": "5e0c28a0a0b2412a3e98c76cc6805ae04e5dfcdb64ea340ab381809c4295eb45"
+  },
+  "dependency_install": {
+    "ok": true,
+    "output": "\nadded 597 packages in 13s\n",
+    "error": null,
+    "exit_code": 0,
+    "truncated": false,
+    "duration_ms": 13188.000000009197,
+    "requires_approval": false
+  },
+  "mutation": {
+    "path": "src/core/math.ts",
+    "old": "Math.hypot(a.x - b.x, a.y - b.y)",
+    "new": "Math.abs(a.x - b.x) + Math.abs(a.y - b.y)"
+  },
+  "rows": [
+    {
+      "id": "axis-only",
+      "authorship": "AI-assisted authored candidate; no model provider called",
+      "candidate_source": "import { test } from 'vitest';\nimport assert from 'node:assert/strict';\nimport { distance } from '../src/core/math';\ntest('distance along an axis and at the same point', () => {\n  assert.equal(distance({x:0,y:0},{x:3,y:0}),3);\n  assert.equal(distance({x:2,y:2},{x:2,y:2}),0);\n});\n",
+      "candidate_sha256": "784cd97df24feb0cbb64f86bede59591d8df71f48535ef8402322142ff23bb2c",
+      "in_loop_verifier": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "full-pinned-regression",
+            "layer": "unit",
+            "ok": true,
+            "output": "\n> arc-shift@1.0.0 test\n> vitest run\n\n\n RUN  v3.2.6 <workspace>\n\n \u2713 tests/repopilot-distance.test.ts (1 test) 1ms\n \u2713 tests/combat.test.ts (18 tests) 13ms\n \u2713 tests/economy.test.ts (15 tests) 21ms\n \u2713 tests/regressions.test.ts (7 tests) 17ms\n \u2713 tests/progression.test.ts (12 tests) 97ms\n \u2713 tests/pilgrimage.test.ts (18 tests) 185ms\n \u2713 tests/weapons.test.ts (9 tests) 380ms\n   \u2713 all three weapons combine with all trial recipes and the maximal stack without exhausting the projectile pool  370ms\n \u2713 tests/resonance.test.ts (13 tests) 388ms\n   \u2713 all trial builds and maximal modifier stacks remain finite and bounded  319ms\n\n Test Files  8 passed (8)\n      Tests  93 passed (93)\n   Start at  17:57:04\n   Duration  1.44s (transform 706ms, setup 0ms, collect 2.10s, tests 1.10s, environment 1ms, prepare 3.37s)\n\n",
+            "error": null,
+            "exit_code": 0,
+            "truncated": false,
+            "duration_ms": 4078.9999999979045,
+            "requires_approval": false
+          },
+          {
+            "name": "diff-review",
+            "layer": "repository",
+            "ok": true,
+            "output": "--- /dev/null\n+++ b/tests/repopilot-distance.test.ts\n@@ -0,0 +1,7 @@\n+import { test } from 'vitest';\n+import assert from 'node:assert/strict';\n+import { distance } from '../src/core/math';\n+test('distance along an axis and at the same point', () => {\n+  assert.equal(distance({x:0,y:0},{x:3,y:0}),3);\n+  assert.equal(distance({x:2,y:2},{x:2,y:2}),0);\n+});\n",
+            "truncated": false
+          },
+          {
+            "name": "changed:tests/repopilot-distance.test.ts",
+            "layer": "acceptance",
+            "ok": true
+          },
+          {
+            "name": "skill:unit",
+            "layer": "acceptance",
+            "ok": true
+          },
+          {
+            "name": "skill:test-file",
+            "layer": "acceptance",
+            "ok": true
+          }
+        ],
+        "changed_files": [
+          "tests/repopilot-distance.test.ts"
+        ],
+        "evidence_source": "process-exit-codes-and-file-contracts",
+        "model_judge": false
+      },
+      "regression_tests_passed": 93,
+      "independent_baseline": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 266.00000000325963,
+        "output": "{\"task_id\":\"arc-017-test-distance\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":1}\n"
+      },
+      "independent_mutant": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 250.0,
+        "output": "{\"task_id\":\"arc-017-test-distance\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":1}\n"
+      },
+      "final_decision": {
+        "accepted": false,
+        "mutation_killed": false,
+        "reason": "supplied-mutation-not-detected"
+      },
+      "implementation_restored": true,
+      "implementation_sha256_after": "5e0c28a0a0b2412a3e98c76cc6805ae04e5dfcdb64ea340ab381809c4295eb45"
+    },
+    {
+      "id": "diagonal-reference",
+      "authorship": "AI-assisted authored candidate; no model provider called",
+      "candidate_source": "import { test } from 'vitest';\nimport assert from 'node:assert/strict';\nimport { distance } from '../src/core/math';\ntest('RepoPilot distance behavioral contract', () => { assert.equal(distance({x:0,y:0},{x:3,y:4}),5); });\n",
+      "candidate_sha256": "1693632261f19f1bb7f67f3615b5ab653023755a7acd8ab38accea14e3906e75",
+      "in_loop_verifier": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "full-pinned-regression",
+            "layer": "unit",
+            "ok": true,
+            "output": "\n> arc-shift@1.0.0 test\n> vitest run\n\n\n RUN  v3.2.6 <workspace>\n\n \u2713 tests/repopilot-distance.test.ts (1 test) 1ms\n \u2713 tests/regressions.test.ts (7 tests) 16ms\n \u2713 tests/economy.test.ts (15 tests) 22ms\n \u2713 tests/combat.test.ts (18 tests) 17ms\n \u2713 tests/progression.test.ts (12 tests) 83ms\n \u2713 tests/pilgrimage.test.ts (18 tests) 173ms\n \u2713 tests/weapons.test.ts (9 tests) 336ms\n   \u2713 all three weapons combine with all trial recipes and the maximal stack without exhausting the projectile pool  327ms\n \u2713 tests/resonance.test.ts (13 tests) 348ms\n\n Test Files  8 passed (8)\n      Tests  93 passed (93)\n   Start at  17:57:07\n   Duration  1.11s (transform 639ms, setup 0ms, collect 2.08s, tests 996ms, environment 1ms, prepare 1.23s)\n\n",
+            "error": null,
+            "exit_code": 0,
+            "truncated": false,
+            "duration_ms": 1921.9999999913853,
+            "requires_approval": false
+          },
+          {
+            "name": "diff-review",
+            "layer": "repository",
+            "ok": true,
+            "output": "--- /dev/null\n+++ b/tests/repopilot-distance.test.ts\n@@ -0,0 +1,4 @@\n+import { test } from 'vitest';\n+import assert from 'node:assert/strict';\n+import { distance } from '../src/core/math';\n+test('RepoPilot distance behavioral contract', () => { assert.equal(distance({x:0,y:0},{x:3,y:4}),5); });\n",
+            "truncated": false
+          },
+          {
+            "name": "changed:tests/repopilot-distance.test.ts",
+            "layer": "acceptance",
+            "ok": true
+          },
+          {
+            "name": "skill:unit",
+            "layer": "acceptance",
+            "ok": true
+          },
+          {
+            "name": "skill:test-file",
+            "layer": "acceptance",
+            "ok": true
+          }
+        ],
+        "changed_files": [
+          "tests/repopilot-distance.test.ts"
+        ],
+        "evidence_source": "process-exit-codes-and-file-contracts",
+        "model_judge": false
+      },
+      "regression_tests_passed": 93,
+      "independent_baseline": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 233.99999999674037,
+        "output": "{\"task_id\":\"arc-017-test-distance\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":1}\n"
+      },
+      "independent_mutant": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 235.00000000058208,
+        "output": "{\"task_id\":\"arc-017-test-distance\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n7 !== 5\\n\"}\n"
+      },
+      "final_decision": {
+        "accepted": true,
+        "mutation_killed": true,
+        "reason": "diagonal-regression-detected"
+      },
+      "implementation_restored": true,
+      "implementation_sha256_after": "5e0c28a0a0b2412a3e98c76cc6805ae04e5dfcdb64ea340ab381809c4295eb45"
+    }
+  ],
+  "interpretation": {
+    "green_proves": "The committed baseline plus the added test passed the configured regression command and file checks.",
+    "green_does_not_prove": "The new test would catch the specific future regression required by the task.",
+    "why_mutant_run_is_candidate_only": "Existing regression tests must not receive credit for the protection added by this candidate test.",
+    "limitations": "One authored task and one known mutant; not an LLM success rate, adversarial sandbox, complete correctness proof or held-out generalization study. Candidate TypeScript executes in a host process. Run trusted code only."
+  },
+  "redaction": "Exact workspace and local source-checkout paths replaced with placeholders in recorded output; exit codes, measured timings and assertion messages retained."
+}
