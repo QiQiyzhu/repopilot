@@ -1,0 +1,693 @@
+{
+  "id": "arc-contract-validation",
+  "title": "ARC//SHIFT task-contract validation",
+  "evidence_type": "reference-and-negative-controls",
+  "is_model_benchmark": false,
+  "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+  "task_count": 36,
+  "validated_count": 36,
+  "real_model_runs": 0,
+  "model_performance": null,
+  "regression_status": "separate pinned-baseline regression report",
+  "note": "Reference patches are an oracle control used to validate tasks. They are never a model provider, and these results do not measure an LLM's ability to solve tasks.",
+  "rows": [
+    {
+      "task_id": "arc-001-clamp-upper",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 858.9999999967404,
+        "output": "{\"task_id\":\"arc-001-clamp-upper\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n10 !== 5\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 281.00000000267755,
+        "output": "{\"task_id\":\"arc-001-clamp-upper\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-002-zero-direction",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 297.0000000059372,
+        "output": "{\"task_id\":\"arc-002-zero-direction\",\"passed\":false,\"error\":\"Expected values to be strictly deep-equal:\\n+ actual - expected\\n\\n  {\\n+   x: NaN,\\n+   y: NaN\\n-   x: 0,\\n-   y: 0\\n  }\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 296.99999999138527,
+        "output": "{\"task_id\":\"arc-002-zero-direction\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-003-normalize-direction",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 312.0000000053551,
+        "output": "{\"task_id\":\"arc-003-normalize-direction\",\"passed\":false,\"error\":\"The expression evaluated to a falsy value:\\n\\n  assert.ok(Math.abs(a.y-0.8)<1e-10)\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 281.99999999196734,
+        "output": "{\"task_id\":\"arc-003-normalize-direction\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-004-rng-upper-inclusive",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 266.00000000325963,
+        "output": "{\"task_id\":\"arc-004-rng-upper-inclusive\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n4 !== 5\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 342.99999999348074,
+        "output": "{\"task_id\":\"arc-004-rng-upper-inclusive\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-005-shuffle-copy",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 282.00000000651926,
+        "output": "{\"task_id\":\"arc-005-shuffle-copy\",\"passed\":false,\"error\":\"Expected values to be strictly deep-equal:\\n+ actual - expected\\n\\n  [\\n    1,\\n-   2,\\n    3,\\n    4,\\n+   6,\\n+   2,\\n    5,\\n-   6\\n  ]\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 235.00000000058208,
+        "output": "{\"task_id\":\"arc-005-shuffle-copy\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-006-critical-boundary",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 233.99999999674037,
+        "output": "{\"task_id\":\"arc-006-critical-boundary\",\"passed\":false,\"error\":\"Expected values to be strictly deep-equal:\\n+ actual - expected\\n\\n  {\\n+   critical: true,\\n+   damage: 36\\n-   critical: false,\\n-   damage: 20\\n  }\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 217.99999999348074,
+        "output": "{\"task_id\":\"arc-006-critical-boundary\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-007-critical-scaling",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 235.00000000058208,
+        "output": "{\"task_id\":\"arc-007-critical-scaling\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n40 !== 20\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 235.00000000058208,
+        "output": "{\"task_id\":\"arc-007-critical-scaling\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-008-cooldown-zero",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 234.0000000112923,
+        "output": "{\"task_id\":\"arc-008-cooldown-zero\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n0 !== 0.75\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 218.00000000803266,
+        "output": "{\"task_id\":\"arc-008-cooldown-zero\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-009-segment-denominator",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-009-segment-denominator\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\nfalse !== true\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 235.00000000058208,
+        "output": "{\"task_id\":\"arc-009-segment-denominator\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-010-segment-endpoint",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 203.99999999790452,
+        "output": "{\"task_id\":\"arc-010-segment-endpoint\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\ntrue !== false\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-010-segment-endpoint\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-011-pool-capacity",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-011-pool-capacity\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n3 !== 2\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 234.0000000112923,
+        "output": "{\"task_id\":\"arc-011-pool-capacity\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-012-pool-misses",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-012-pool-misses\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n2 !== 1\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-012-pool-misses\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-013-pool-clear",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 217.99999999348074,
+        "output": "{\"task_id\":\"arc-013-pool-clear\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n2 !== 0\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 219.00000001187436,
+        "output": "{\"task_id\":\"arc-013-pool-clear\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-014-pool-count",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-014-pool-count\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n3 !== 0\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-014-pool-count\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-015-wallet-cap",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 233.99999999674037,
+        "output": "{\"task_id\":\"arc-015-wallet-cap\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n999 !== 0\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 202.99999999406282,
+        "output": "{\"task_id\":\"arc-015-wallet-cap\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-016-wallet-floor",
+      "category": "Bug Fix",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 235.00000000058208,
+        "output": "{\"task_id\":\"arc-016-wallet-floor\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n3 !== 2\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 218.00000000803266,
+        "output": "{\"task_id\":\"arc-016-wallet-floor\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-017-test-distance",
+      "category": "Add Test",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 171.99999999138527,
+        "output": "{\"task_id\":\"arc-017-test-distance\",\"passed\":false,\"error\":\"ENOENT: no such file or directory, open 'C:\\\\Users\\\\yzhu\\\\Documents\\\\ChatGPT\\\\RepoPilot\\\\.repopilot\\\\benchmark\\\\workspaces\\\\77950b10-928c-4f75-a4f3-a61c7ab0dc7b\\\\tests\\\\repopilot-distance.test.ts'\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 250.0,
+        "output": "{\"task_id\":\"arc-017-test-distance\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":1}\n"
+      },
+      "mutation_adequacy": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 235.00000000058208,
+        "output": "{\"task_id\":\"arc-017-test-distance\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n7 !== 5\\n\"}\n"
+      }
+    },
+    {
+      "task_id": "arc-018-test-zero-direction",
+      "category": "Add Test",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 187.0000000053551,
+        "output": "{\"task_id\":\"arc-018-test-zero-direction\",\"passed\":false,\"error\":\"ENOENT: no such file or directory, open 'C:\\\\Users\\\\yzhu\\\\Documents\\\\ChatGPT\\\\RepoPilot\\\\.repopilot\\\\benchmark\\\\workspaces\\\\77950b10-928c-4f75-a4f3-a61c7ab0dc7b\\\\tests\\\\repopilot-zero-direction.test.ts'\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 250.0,
+        "output": "{\"task_id\":\"arc-018-test-zero-direction\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":1}\n"
+      },
+      "mutation_adequacy": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 235.00000000058208,
+        "output": "{\"task_id\":\"arc-018-test-zero-direction\",\"passed\":false,\"error\":\"Expected values to be strictly deep-equal:\\n+ actual - expected\\n\\n  {\\n+   x: NaN,\\n+   y: NaN\\n-   x: 0,\\n-   y: 0\\n  }\\n\"}\n"
+      }
+    },
+    {
+      "task_id": "arc-019-test-cooldown",
+      "category": "Add Test",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 187.0000000053551,
+        "output": "{\"task_id\":\"arc-019-test-cooldown\",\"passed\":false,\"error\":\"ENOENT: no such file or directory, open 'C:\\\\Users\\\\yzhu\\\\Documents\\\\ChatGPT\\\\RepoPilot\\\\.repopilot\\\\benchmark\\\\workspaces\\\\77950b10-928c-4f75-a4f3-a61c7ab0dc7b\\\\tests\\\\repopilot-cooldown.test.ts'\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 233.99999999674037,
+        "output": "{\"task_id\":\"arc-019-test-cooldown\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":1}\n"
+      },
+      "mutation_adequacy": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-019-test-cooldown\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n-0.4 !== 0\\n\"}\n"
+      }
+    },
+    {
+      "task_id": "arc-020-test-weapon-default",
+      "category": "Add Test",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 172.00000000593718,
+        "output": "{\"task_id\":\"arc-020-test-weapon-default\",\"passed\":false,\"error\":\"ENOENT: no such file or directory, open 'C:\\\\Users\\\\yzhu\\\\Documents\\\\ChatGPT\\\\RepoPilot\\\\.repopilot\\\\benchmark\\\\workspaces\\\\77950b10-928c-4f75-a4f3-a61c7ab0dc7b\\\\tests\\\\repopilot-weapon-default.test.ts'\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 233.99999999674037,
+        "output": "{\"task_id\":\"arc-020-test-weapon-default\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":1}\n"
+      },
+      "mutation_adequacy": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-020-test-weapon-default\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n'sword' !== 'arc'\\n\"}\n"
+      }
+    },
+    {
+      "task_id": "arc-021-test-wallet-fallback",
+      "category": "Add Test",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 187.9999999946449,
+        "output": "{\"task_id\":\"arc-021-test-wallet-fallback\",\"passed\":false,\"error\":\"ENOENT: no such file or directory, open 'C:\\\\Users\\\\yzhu\\\\Documents\\\\ChatGPT\\\\RepoPilot\\\\.repopilot\\\\benchmark\\\\workspaces\\\\77950b10-928c-4f75-a4f3-a61c7ab0dc7b\\\\tests\\\\repopilot-wallet-fallback.test.ts'\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 234.0000000112923,
+        "output": "{\"task_id\":\"arc-021-test-wallet-fallback\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":1}\n"
+      },
+      "mutation_adequacy": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-021-test-wallet-fallback\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\n0 !== 8\\n\"}\n"
+      }
+    },
+    {
+      "task_id": "arc-022-test-boss-membership",
+      "category": "Add Test",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 171.99999999138527,
+        "output": "{\"task_id\":\"arc-022-test-boss-membership\",\"passed\":false,\"error\":\"ENOENT: no such file or directory, open 'C:\\\\Users\\\\yzhu\\\\Documents\\\\ChatGPT\\\\RepoPilot\\\\.repopilot\\\\benchmark\\\\workspaces\\\\77950b10-928c-4f75-a4f3-a61c7ab0dc7b\\\\tests\\\\repopilot-boss-membership.test.ts'\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 203.00000000861473,
+        "output": "{\"task_id\":\"arc-022-test-boss-membership\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":1}\n"
+      },
+      "mutation_adequacy": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-022-test-boss-membership\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\nfalse !== true\\n\"}\n"
+      }
+    },
+    {
+      "task_id": "arc-023-feature-lerp",
+      "category": "Small Feature",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 202.99999999406282,
+        "output": "{\"task_id\":\"arc-023-feature-lerp\",\"passed\":false,\"error\":\"m.lerp is not a function\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-023-feature-lerp\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-024-feature-inverselerp",
+      "category": "Small Feature",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 203.00000000861473,
+        "output": "{\"task_id\":\"arc-024-feature-inverselerp\",\"passed\":false,\"error\":\"m.inverseLerp is not a function\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 203.99999999790452,
+        "output": "{\"task_id\":\"arc-024-feature-inverselerp\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-025-feature-wrapangle",
+      "category": "Small Feature",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 233.99999999674037,
+        "output": "{\"task_id\":\"arc-025-feature-wrapangle\",\"passed\":false,\"error\":\"m.wrapAngle is not a function\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-025-feature-wrapangle\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-026-feature-magnitudesquared",
+      "category": "Small Feature",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 203.00000000861473,
+        "output": "{\"task_id\":\"arc-026-feature-magnitudesquared\",\"passed\":false,\"error\":\"m.magnitudeSquared is not a function\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-026-feature-magnitudesquared\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-027-feature-saturate",
+      "category": "Small Feature",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-027-feature-saturate\",\"passed\":false,\"error\":\"m.saturate is not a function\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 187.0000000053551,
+        "output": "{\"task_id\":\"arc-027-feature-saturate\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-028-feature-maprange",
+      "category": "Small Feature",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 235.00000000058208,
+        "output": "{\"task_id\":\"arc-028-feature-maprange\",\"passed\":false,\"error\":\"m.mapRange is not a function\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 233.99999999674037,
+        "output": "{\"task_id\":\"arc-028-feature-maprange\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-029-refactor-trap-clock",
+      "category": "Refactor",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 312.9999999946449,
+        "output": "{\"task_id\":\"arc-029-refactor-trap-clock\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\nundefined !== 4\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 297.0000000059372,
+        "output": "{\"task_id\":\"arc-029-refactor-trap-clock\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-030-refactor-beam-width",
+      "category": "Refactor",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 217.99999999348074,
+        "output": "{\"task_id\":\"arc-030-refactor-beam-width\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\nundefined !== 14\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 203.00000000861473,
+        "output": "{\"task_id\":\"arc-030-refactor-beam-width\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-031-refactor-starting-coins",
+      "category": "Refactor",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 202.99999999406282,
+        "output": "{\"task_id\":\"arc-031-refactor-starting-coins\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\nundefined !== 8\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 202.99999999406282,
+        "output": "{\"task_id\":\"arc-031-refactor-starting-coins\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-032-refactor-base-damage",
+      "category": "Refactor",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 203.00000000861473,
+        "output": "{\"task_id\":\"arc-032-refactor-base-damage\",\"passed\":false,\"error\":\"Expected values to be strictly equal:\\n\\nundefined !== 16\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 203.00000000861473,
+        "output": "{\"task_id\":\"arc-032-refactor-base-damage\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-033-performance-segment-sqrt",
+      "category": "Performance",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-033-performance-segment-sqrt\",\"passed\":false,\"error\":\"The expression evaluated to a falsy value:\\n\\n  assert.ok(!read('src/combat/rules.ts').includes('return Math.hypot(ax +'))\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 233.99999999674037,
+        "output": "{\"task_id\":\"arc-033-performance-segment-sqrt\",\"passed\":true,\"assertions\":\"560 boundary comparisons plus removal of the targeted square-root call; no measured latency claim\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-034-performance-block-sqrt",
+      "category": "Performance",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 328.00000000861473,
+        "output": "{\"task_id\":\"arc-034-performance-block-sqrt\",\"passed\":false,\"error\":\"The expression evaluated to a falsy value:\\n\\n  assert.ok(!read('src/rooms/terrain.ts').includes('Math.hypot(x - clamp'))\\n\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 327.9999999940628,
+        "output": "{\"task_id\":\"arc-034-performance-block-sqrt\",\"passed\":true,\"assertions\":\"160 boundary comparisons plus elimination of the targeted square-root call; no measured latency claim\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-035-document-wallet-contract",
+      "category": "Documentation + Code Consistency",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 235.00000000058208,
+        "output": "{\"task_id\":\"arc-035-document-wallet-contract\",\"passed\":false,\"error\":\"ENOENT: no such file or directory, open 'C:\\\\Users\\\\yzhu\\\\Documents\\\\ChatGPT\\\\RepoPilot\\\\.repopilot\\\\benchmark\\\\workspaces\\\\77950b10-928c-4f75-a4f3-a61c7ab0dc7b\\\\docs\\\\contracts\\\\wallet.json'\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 233.99999999674037,
+        "output": "{\"task_id\":\"arc-035-document-wallet-contract\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    },
+    {
+      "task_id": "arc-036-document-boss-contract",
+      "category": "Documentation + Code Consistency",
+      "validated": true,
+      "negative_control": {
+        "passed": false,
+        "exit_code": 1,
+        "latency_ms": 218.99999999732245,
+        "output": "{\"task_id\":\"arc-036-document-boss-contract\",\"passed\":false,\"error\":\"ENOENT: no such file or directory, open 'C:\\\\Users\\\\yzhu\\\\Documents\\\\ChatGPT\\\\RepoPilot\\\\.repopilot\\\\benchmark\\\\workspaces\\\\77950b10-928c-4f75-a4f3-a61c7ab0dc7b\\\\docs\\\\contracts\\\\bosses.json'\"}\n"
+      },
+      "reference_control": {
+        "passed": true,
+        "exit_code": 0,
+        "latency_ms": 234.0000000112923,
+        "output": "{\"task_id\":\"arc-036-document-boss-contract\",\"passed\":true,\"assertions\":\"Independent behavioral assertions against the candidate source\",\"candidate_tests_executed\":0}\n"
+      },
+      "mutation_adequacy": null
+    }
+  ]
+}

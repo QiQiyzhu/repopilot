@@ -1,0 +1,51 @@
+{
+  "id": "arc-pinned-baseline",
+  "title": "Pinned ARC//SHIFT regression baseline",
+  "evidence_type": "real-repository-checks",
+  "is_model_benchmark": false,
+  "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+  "passed": true,
+  "checks": [
+    {
+      "name": "dependency-install",
+      "ok": true,
+      "output": "\nadded 597 packages in 29s\n",
+      "error": null,
+      "exit_code": 0,
+      "truncated": false,
+      "duration_ms": 29139.999999999418,
+      "requires_approval": false
+    },
+    {
+      "name": "test",
+      "ok": true,
+      "output": "\n> arc-shift@1.0.0 test\n> vitest run\n\n\n RUN  v3.2.6 <RepoPilot>/.repopilot/baseline/7f52b8e3-4bde-4656-b129-fefd29c444bf\n\n \u2713 tests/combat.test.ts (18 tests) 20ms\n \u2713 tests/regressions.test.ts (7 tests) 26ms\n \u2713 tests/economy.test.ts (15 tests) 31ms\n \u2713 tests/progression.test.ts (12 tests) 98ms\n \u2713 tests/pilgrimage.test.ts (18 tests) 191ms\n \u2713 tests/weapons.test.ts (9 tests) 382ms\n   \u2713 all three weapons combine with all trial recipes and the maximal stack without exhausting the projectile pool  368ms\n \u2713 tests/resonance.test.ts (13 tests) 410ms\n   \u2713 all trial builds and maximal modifier stacks remain finite and bounded  336ms\n\n Test Files  7 passed (7)\n      Tests  92 passed (92)\n   Start at  13:04:38\n   Duration  1.75s (transform 543ms, setup 0ms, collect 1.87s, tests 1.16s, environment 1ms, prepare 3.98s)\n\n",
+      "error": null,
+      "exit_code": 0,
+      "truncated": false,
+      "duration_ms": 4921.999999991385,
+      "requires_approval": false
+    },
+    {
+      "name": "typecheck",
+      "ok": true,
+      "output": "\n> arc-shift@1.0.0 typecheck\n> tsc --noEmit\n\n",
+      "error": null,
+      "exit_code": 0,
+      "truncated": false,
+      "duration_ms": 5358.99999999674,
+      "requires_approval": false
+    },
+    {
+      "name": "build",
+      "ok": true,
+      "output": "\n> arc-shift@1.0.0 build\n> tsc --noEmit && vite build\n\nvite v8.2.2 building client environment for production...\ntransforming...\n\u2713 2037 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                                                     0.63 kB \u2502 gzip:   0.48 kB\ndist/assets/space-grote[REDACTED].woff2      4.20 kB\ndist/assets/space-grote[REDACTED].woff2      4.29 kB\ndist/assets/space-grote[REDACTED].woff2      4.32 kB\ndist/assets/space-grote[REDACTED].woff       5.58 kB\ndist/assets/space-grote[REDACTED].woff       5.71 kB\ndist/assets/space-grote[REDACTED].woff       5.72 kB\ndist/assets/space-grote[REDACTED].woff2      11.99 kB\ndist/assets/space-grote[REDACTED].woff2      12.25 kB\ndist/assets/space-grote[REDACTED].woff2      12.27 kB\ndist/assets/space-grote[REDACTED].woff2          12.84 kB\ndist/assets/space-grote[REDACTED].woff2          13.31 kB\ndist/assets/space-grote[REDACTED].woff2          13.38 kB\ndist/assets/space-grote[REDACTED].woff           16.41 kB\ndist/assets/space-grote[REDACTED].woff       16.46 kB\ndist/assets/space-grote[REDACTED].woff       16.78 kB\ndist/assets/space-grote[REDACTED].woff       16.78 kB\ndist/assets/space-grote[REDACTED].woff           16.98 kB\ndist/assets/space-grote[REDACTED].woff           17.00 kB\ndist/assets/index-6IBUiNml.css                                    186.30 kB \u2502 gzip:  32.69 kB\ndist/assets/index-0-6V5shv.js                                   1,652.15 kB \u2502 gzip: 472.96 kB\n\n\u2713 built in 1.66s\n",
+      "error": null,
+      "exit_code": 0,
+      "truncated": false,
+      "duration_ms": 9812.000000005355,
+      "requires_approval": false
+    }
+  ],
+  "note": "Tests/build execute only in a fresh archive of the pinned commit, not the user's working tree. This validates the evaluation baseline, not a model-generated patch."
+}

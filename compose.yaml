@@ -1,0 +1,26 @@
+services:
+  backend:
+    build: .
+    ports: ["127.0.0.1:8000:8000"]
+    volumes: ["workspaces:/workspace"]
+    read_only: true
+    tmpfs: ["/tmp:size=128m"]
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 128
+    mem_limit: 1g
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+  frontend:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.frontend
+    ports: ["127.0.0.1:8080:8080"]
+    depends_on:
+      backend:
+        condition: service_healthy
+volumes:
+  workspaces:

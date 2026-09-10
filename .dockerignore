@@ -1,0 +1,9 @@
+.git
+.venv
+.bootstrap
+.repopilot
+**/node_modules
+**/__pycache__
+outputs
+.env*
+frontend/dist

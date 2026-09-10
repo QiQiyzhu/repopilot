@@ -1,0 +1,7 @@
+{
+  "name": "repopilot-arc-acceptance",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Independent executable acceptance contracts for a pinned ARC//SHIFT snapshot",
+  "dependencies": {"typescript": "5.9.3"}
+}

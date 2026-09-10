@@ -1,0 +1,1160 @@
+{
+  "schema_version": 1,
+  "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+  "count": 36,
+  "tasks": [
+    {
+      "task_id": "arc-001-clamp-upper",
+      "description": "Repair clamp so values below, inside and above the interval are bounded correctly.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/math.ts"
+      ],
+      "acceptance_js": "const {clamp}=load('src/core/math.ts');assert.equal(clamp(5,0,10),5);assert.equal(clamp(-2,0,10),0);assert.equal(clamp(12,0,10),10);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/core/math.ts",
+        "old": "Math.max(a, Math.min(b, n))",
+        "new": "Math.max(a, Math.max(b, n))"
+      },
+      "reference_patch": {
+        "path": "src/core/math.ts",
+        "old": "Math.max(a, Math.max(b, n))",
+        "new": "Math.max(a, Math.min(b, n))"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-002-zero-direction",
+      "description": "Prevent NaN direction components for the zero vector.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/math.ts"
+      ],
+      "acceptance_js": "const {direction}=load('src/core/math.ts');assert.deepEqual(direction(0,0),{x:0,y:0});",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/core/math.ts",
+        "old": "return n > 0 ?",
+        "new": "return n >= 0 ?"
+      },
+      "reference_patch": {
+        "path": "src/core/math.ts",
+        "old": "return n >= 0 ?",
+        "new": "return n > 0 ?"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-003-normalize-direction",
+      "description": "Normalize diagonal movement to unit length without changing signs.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/math.ts"
+      ],
+      "acceptance_js": "const {direction}=load('src/core/math.ts');const a=direction(-3,4);assert.ok(Math.abs(a.x+0.6)<1e-10);assert.ok(Math.abs(a.y-0.8)<1e-10);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/core/math.ts",
+        "old": "{ x: x / n, y: y / n }",
+        "new": "{ x: x / n, y: y }"
+      },
+      "reference_patch": {
+        "path": "src/core/math.ts",
+        "old": "{ x: x / n, y: y }",
+        "new": "{ x: x / n, y: y / n }"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-004-rng-upper-inclusive",
+      "description": "Restore inclusive integer sampling, including a singleton range.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/math.ts"
+      ],
+      "acceptance_js": "const {Random}=load('src/core/math.ts');const r=new Random(1);r.next=()=>0.999;assert.equal(r.int(2,5),5);assert.equal(r.int(4,4),4);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/core/math.ts",
+        "old": "(b - a + 1)",
+        "new": "(b - a)"
+      },
+      "reference_patch": {
+        "path": "src/core/math.ts",
+        "old": "(b - a)",
+        "new": "(b - a + 1)"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-005-shuffle-copy",
+      "description": "Shuffling must preserve the caller's input array.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/math.ts"
+      ],
+      "acceptance_js": "const {Random}=load('src/core/math.ts');const a=[1,2,3,4,5,6];const before=[...a];const b=new Random(2).shuffle(a);assert.deepEqual(a,before);assert.notEqual(a,b);assert.deepEqual([...b].sort(),before);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/core/math.ts",
+        "old": "const a = [...xs];",
+        "new": "const a = xs as T[];"
+      },
+      "reference_patch": {
+        "path": "src/core/math.ts",
+        "old": "const a = xs as T[];",
+        "new": "const a = [...xs];"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-006-critical-boundary",
+      "description": "A roll exactly equal to critical chance must remain a normal hit.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/combat/rules.ts"
+      ],
+      "acceptance_js": "const {calculateDamage}=load('src/combat/rules.ts');assert.deepEqual(calculateDamage(20,.2,1.8,.2),{damage:20,critical:false});assert.equal(calculateDamage(20,.2,1.8,.199).damage,36);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/combat/rules.ts",
+        "old": "roll < critChance",
+        "new": "roll <= critChance"
+      },
+      "reference_patch": {
+        "path": "src/combat/rules.ts",
+        "old": "roll <= critChance",
+        "new": "roll < critChance"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-007-critical-scaling",
+      "description": "Normal hits must not apply the critical multiplier.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/combat/rules.ts"
+      ],
+      "acceptance_js": "const {calculateDamage}=load('src/combat/rules.ts');assert.equal(calculateDamage(20,0,2,.5).damage,20);assert.equal(calculateDamage(20,1,2,.5).damage,40);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/combat/rules.ts",
+        "old": "critical ? critPower : 1",
+        "new": "critical ? critPower : critPower"
+      },
+      "reference_patch": {
+        "path": "src/combat/rules.ts",
+        "old": "critical ? critPower : critPower",
+        "new": "critical ? critPower : 1"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-008-cooldown-zero",
+      "description": "Cooldowns must count down and clamp to exactly zero.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/combat/rules.ts"
+      ],
+      "acceptance_js": "const {cooldown}=load('src/combat/rules.ts');assert.equal(cooldown(1,.25),.75);assert.equal(cooldown(.1,.5),0);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/combat/rules.ts",
+        "old": "Math.max(0, remaining - dt)",
+        "new": "Math.min(0, remaining - dt)"
+      },
+      "reference_patch": {
+        "path": "src/combat/rules.ts",
+        "old": "Math.min(0, remaining - dt)",
+        "new": "Math.max(0, remaining - dt)"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-009-segment-denominator",
+      "description": "Fast diagonal projectiles must hit targets on their swept segment.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/combat/rules.ts"
+      ],
+      "acceptance_js": "const {segmentHits}=load('src/combat/rules.ts');assert.equal(segmentHits(0,0,100,100,50,50,1),true);assert.equal(segmentHits(0,0,100,100,50,60,1),false);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/combat/rules.ts",
+        "old": "dx * dx + dy * dy || 1",
+        "new": "dx * dx || 1"
+      },
+      "reference_patch": {
+        "path": "src/combat/rules.ts",
+        "old": "dx * dx || 1",
+        "new": "dx * dx + dy * dy || 1"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-010-segment-endpoint",
+      "description": "Swept collision must not hit a target beyond the segment endpoint.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/combat/rules.ts"
+      ],
+      "acceptance_js": "const {segmentHits}=load('src/combat/rules.ts');assert.equal(segmentHits(0,0,10,0,15,0,1),false);assert.equal(segmentHits(0,0,10,0,9.5,0,1),true);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/combat/rules.ts",
+        "old": "Math.min(1, ((x - ax) * dx + (y - ay) * dy)",
+        "new": "Math.min(2, ((x - ax) * dx + (y - ay) * dy)"
+      },
+      "reference_patch": {
+        "path": "src/combat/rules.ts",
+        "old": "Math.min(2, ((x - ax) * dx + (y - ay) * dy)",
+        "new": "Math.min(1, ((x - ax) * dx + (y - ay) * dy)"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-011-pool-capacity",
+      "description": "A pool must allocate its configured capacity, with no hidden extra slot.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/pool.ts"
+      ],
+      "acceptance_js": "const {Pool}=load('src/core/pool.ts');const p=new Pool(2,()=>({active:false}));assert.equal(p.items.length,2);assert.ok(p.acquire());assert.ok(p.acquire());assert.equal(p.acquire(),undefined);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/core/pool.ts",
+        "old": "{ length: capacity }",
+        "new": "{ length: capacity + 1 }"
+      },
+      "reference_patch": {
+        "path": "src/core/pool.ts",
+        "old": "{ length: capacity + 1 }",
+        "new": "{ length: capacity }"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-012-pool-misses",
+      "description": "Exhaustion must increment the pool's miss counter exactly once per attempt.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/pool.ts"
+      ],
+      "acceptance_js": "const {Pool}=load('src/core/pool.ts');const p=new Pool(1,()=>({active:false}));p.acquire();p.acquire();assert.equal(p.misses,1);p.acquire();assert.equal(p.misses,2);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/core/pool.ts",
+        "old": "this.misses++;",
+        "new": "this.misses += 2;"
+      },
+      "reference_patch": {
+        "path": "src/core/pool.ts",
+        "old": "this.misses += 2;",
+        "new": "this.misses++;"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-013-pool-clear",
+      "description": "Clearing a pool must release all active slots for reuse.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/pool.ts"
+      ],
+      "acceptance_js": "const {Pool}=load('src/core/pool.ts');const p=new Pool(2,()=>({active:false}));p.acquire();p.acquire();p.clear();assert.equal(p.count,0);assert.ok(p.acquire());",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/core/pool.ts",
+        "old": "item.active = false",
+        "new": "item.active = true"
+      },
+      "reference_patch": {
+        "path": "src/core/pool.ts",
+        "old": "item.active = true",
+        "new": "item.active = false"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-014-pool-count",
+      "description": "Pool count must report active, rather than inactive, objects.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/pool.ts"
+      ],
+      "acceptance_js": "const {Pool}=load('src/core/pool.ts');const p=new Pool(3,()=>({active:false}));assert.equal(p.count,0);p.acquire();assert.equal(p.count,1);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/core/pool.ts",
+        "old": "if (i.active) n++;",
+        "new": "if (!i.active) n++;"
+      },
+      "reference_patch": {
+        "path": "src/core/pool.ts",
+        "old": "if (!i.active) n++;",
+        "new": "if (i.active) n++;"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-015-wallet-cap",
+      "description": "Loading a wallet must clamp negative and excessive resources to valid caps.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/economy/catalog.ts"
+      ],
+      "acceptance_js": "const {normalizeWallet}=load('src/economy/catalog.ts');const w=normalizeWallet({coins:-1,keys:200,bombs:2,tonics:90,shards:20});assert.equal(w.coins,0);assert.equal(w.keys,9);assert.equal(w.bombs,2);assert.equal(w.tonics,3);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/economy/catalog.ts",
+        "old": "Math.max(0, Math.min(LIMITS[key], Math.floor(n)))",
+        "new": "Math.max(0, Math.max(LIMITS[key], Math.floor(n)))"
+      },
+      "reference_patch": {
+        "path": "src/economy/catalog.ts",
+        "old": "Math.max(0, Math.max(LIMITS[key], Math.floor(n)))",
+        "new": "Math.max(0, Math.min(LIMITS[key], Math.floor(n)))"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-016-wallet-floor",
+      "description": "Fractional saved resource counts must be floored, not rounded upward.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Bug Fix",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/economy/catalog.ts"
+      ],
+      "acceptance_js": "const {normalizeWallet}=load('src/economy/catalog.ts');assert.equal(normalizeWallet({coins:2.9}).coins,2);assert.equal(normalizeWallet({keys:.8}).keys,0);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": {
+        "path": "src/economy/catalog.ts",
+        "old": "Math.min(LIMITS[key], Math.floor(n))",
+        "new": "Math.min(LIMITS[key], Math.ceil(n))"
+      },
+      "reference_patch": {
+        "path": "src/economy/catalog.ts",
+        "old": "Math.min(LIMITS[key], Math.ceil(n))",
+        "new": "Math.min(LIMITS[key], Math.floor(n))"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-017-test-distance",
+      "description": "Add a behavioral regression test for distance. The test must pass the baseline and reject the supplied incorrect behavior; implementation must remain unchanged.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Add Test",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "tests/repopilot-distance.test.ts"
+      ],
+      "acceptance_js": "load('tests/repopilot-distance.test.ts');",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "tests/repopilot-distance.test.ts",
+        "old": "",
+        "new": "import { test } from 'vitest';\nimport assert from 'node:assert/strict';\nimport { distance } from '../src/core/math';\ntest('RepoPilot distance behavioral contract', () => { assert.equal(distance({x:0,y:0},{x:3,y:4}),5); });\n"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      },
+      "adequacy_mutation": {
+        "path": "src/core/math.ts",
+        "old": "Math.hypot(a.x - b.x, a.y - b.y)",
+        "new": "Math.abs(a.x - b.x) + Math.abs(a.y - b.y)"
+      }
+    },
+    {
+      "task_id": "arc-018-test-zero-direction",
+      "description": "Add a behavioral regression test for direction. The test must pass the baseline and reject the supplied incorrect behavior; implementation must remain unchanged.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Add Test",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "tests/repopilot-zero-direction.test.ts"
+      ],
+      "acceptance_js": "load('tests/repopilot-zero-direction.test.ts');",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "tests/repopilot-zero-direction.test.ts",
+        "old": "",
+        "new": "import { test } from 'vitest';\nimport assert from 'node:assert/strict';\nimport { direction } from '../src/core/math';\ntest('RepoPilot zero-direction behavioral contract', () => { assert.deepEqual(direction(0,0),{x:0,y:0}); });\n"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      },
+      "adequacy_mutation": {
+        "path": "src/core/math.ts",
+        "old": "return n > 0 ?",
+        "new": "return n >= 0 ?"
+      }
+    },
+    {
+      "task_id": "arc-019-test-cooldown",
+      "description": "Add a behavioral regression test for cooldown. The test must pass the baseline and reject the supplied incorrect behavior; implementation must remain unchanged.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Add Test",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "tests/repopilot-cooldown.test.ts"
+      ],
+      "acceptance_js": "load('tests/repopilot-cooldown.test.ts');",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "tests/repopilot-cooldown.test.ts",
+        "old": "",
+        "new": "import { test } from 'vitest';\nimport assert from 'node:assert/strict';\nimport { cooldown } from '../src/combat/rules';\ntest('RepoPilot cooldown behavioral contract', () => { assert.equal(cooldown(.1,.5),0);assert.equal(cooldown(1,.2),.8); });\n"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      },
+      "adequacy_mutation": {
+        "path": "src/combat/rules.ts",
+        "old": "Math.max(0, remaining - dt)",
+        "new": "Math.min(0, remaining - dt)"
+      }
+    },
+    {
+      "task_id": "arc-020-test-weapon-default",
+      "description": "Add a behavioral regression test for weaponId. The test must pass the baseline and reject the supplied incorrect behavior; implementation must remain unchanged.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Add Test",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "tests/repopilot-weapon-default.test.ts"
+      ],
+      "acceptance_js": "load('tests/repopilot-weapon-default.test.ts');",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "tests/repopilot-weapon-default.test.ts",
+        "old": "",
+        "new": "import { test } from 'vitest';\nimport assert from 'node:assert/strict';\nimport { weaponId } from '../src/economy/catalog';\ntest('RepoPilot weapon-default behavioral contract', () => { assert.equal(weaponId('broken'),'arc');assert.equal(weaponId('sword'),'sword'); });\n"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      },
+      "adequacy_mutation": {
+        "path": "src/economy/catalog.ts",
+        "old": "? value : 'arc'",
+        "new": "? value : 'sword'"
+      }
+    },
+    {
+      "task_id": "arc-021-test-wallet-fallback",
+      "description": "Add a behavioral regression test for normalizeWallet. The test must pass the baseline and reject the supplied incorrect behavior; implementation must remain unchanged.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Add Test",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "tests/repopilot-wallet-fallback.test.ts"
+      ],
+      "acceptance_js": "load('tests/repopilot-wallet-fallback.test.ts');",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "tests/repopilot-wallet-fallback.test.ts",
+        "old": "",
+        "new": "import { test } from 'vitest';\nimport assert from 'node:assert/strict';\nimport { normalizeWallet } from '../src/economy/catalog';\ntest('RepoPilot wallet-fallback behavioral contract', () => { assert.equal(normalizeWallet(null).coins,8);assert.equal(normalizeWallet({coins:NaN}).coins,8); });\n"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      },
+      "adequacy_mutation": {
+        "path": "src/economy/catalog.ts",
+        "old": "coins: 8 +",
+        "new": "coins: 0 +"
+      }
+    },
+    {
+      "task_id": "arc-022-test-boss-membership",
+      "description": "Add a behavioral regression test for isBoss. The test must pass the baseline and reject the supplied incorrect behavior; implementation must remain unchanged.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Add Test",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "tests/repopilot-boss-membership.test.ts"
+      ],
+      "acceptance_js": "load('tests/repopilot-boss-membership.test.ts');",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "tests/repopilot-boss-membership.test.ts",
+        "old": "",
+        "new": "import { test } from 'vitest';\nimport assert from 'node:assert/strict';\nimport { isBoss } from '../src/progression/catalog';\ntest('RepoPilot boss-membership behavioral contract', () => { assert.equal(isBoss('matron'),true);assert.equal(isBoss('hunter'),false); });\n"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      },
+      "adequacy_mutation": {
+        "path": "src/progression/catalog.ts",
+        "old": "BOSSES.includes(kind as BossKind)",
+        "new": "kind === 'oracle'"
+      }
+    },
+    {
+      "task_id": "arc-023-feature-lerp",
+      "description": "Interpolate two numeric values, preserving both endpoints and allowing extrapolation.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Small Feature",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/math.ts"
+      ],
+      "acceptance_js": "const m=load('src/core/math.ts');assert.equal(m.lerp(2,10,0),2);assert.equal(m.lerp(2,10,1),10);assert.equal(m.lerp(2,10,.5),6);assert.equal(m.lerp(2,10,2),18);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "src/core/math.ts",
+        "old": "export const W = 1280,",
+        "new": "export const lerp = (a: number, b: number, t: number) => a + (b - a) * t;\nexport const W = 1280,"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-024-feature-inverselerp",
+      "description": "Add inverseLerp(a,b,value), returning zero for a degenerate interval.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Small Feature",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/math.ts"
+      ],
+      "acceptance_js": "const m=load('src/core/math.ts');assert.equal(m.inverseLerp(2,10,6),.5);assert.equal(m.inverseLerp(4,4,7),0);assert.equal(m.inverseLerp(10,2,6),.5);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "src/core/math.ts",
+        "old": "export const W = 1280,",
+        "new": "export const inverseLerp = (a: number, b: number, value: number) => a === b ? 0 : (value - a) / (b - a);\nexport const W = 1280,"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-025-feature-wrapangle",
+      "description": "Add wrapAngle(radians) into [-PI, PI), handling negative turns.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Small Feature",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/math.ts"
+      ],
+      "acceptance_js": "const m=load('src/core/math.ts');assert.ok(Math.abs(m.wrapAngle(5*Math.PI)+Math.PI)<1e-10);assert.ok(Math.abs(m.wrapAngle(-4*Math.PI))<1e-10);assert.ok(Math.abs(m.wrapAngle(.4)-.4)<1e-10);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "src/core/math.ts",
+        "old": "export const W = 1280,",
+        "new": "export const wrapAngle = (radians: number) => ((radians + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;\nexport const W = 1280,"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-026-feature-magnitudesquared",
+      "description": "Add magnitudeSquared(x,y) for inexpensive range comparisons.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Small Feature",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/math.ts"
+      ],
+      "acceptance_js": "const m=load('src/core/math.ts');assert.equal(m.magnitudeSquared(3,4),25);assert.equal(m.magnitudeSquared(-3,4),25);assert.equal(m.magnitudeSquared(0,0),0);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "src/core/math.ts",
+        "old": "export const W = 1280,",
+        "new": "export const magnitudeSquared = (x: number, y: number) => x * x + y * y;\nexport const W = 1280,"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-027-feature-saturate",
+      "description": "Add saturate(value) clamping to [0,1]; reject NaN as zero.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Small Feature",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/math.ts"
+      ],
+      "acceptance_js": "const m=load('src/core/math.ts');assert.equal(m.saturate(-2),0);assert.equal(m.saturate(.7),.7);assert.equal(m.saturate(8),1);assert.equal(m.saturate(NaN),0);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "src/core/math.ts",
+        "old": "export const W = 1280,",
+        "new": "export const saturate = (value: number) => Number.isNaN(value) ? 0 : Math.max(0, Math.min(1, value));\nexport const W = 1280,"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-028-feature-maprange",
+      "description": "Add mapRange(value,inLow,inHigh,outLow,outHigh), returning outLow for zero input span.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Small Feature",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/core/math.ts"
+      ],
+      "acceptance_js": "const m=load('src/core/math.ts');assert.equal(m.mapRange(5,0,10,20,40),30);assert.equal(m.mapRange(5,2,2,7,9),7);assert.equal(m.mapRange(10,10,0,0,100),0);",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "src/core/math.ts",
+        "old": "export const W = 1280,",
+        "new": "export const mapRange = (value: number, inLow: number, inHigh: number, outLow: number, outHigh: number) => inHigh === inLow ? outLow : outLow + (value - inLow) / (inHigh - inLow) * (outHigh - outLow);\nexport const W = 1280,"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-029-refactor-trap-clock",
+      "description": "Extract TRAP_PERIOD=4 and TRAP_ACTIVE_AT=2.8 and use both in zoneActive without behavior change.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Refactor",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/rooms/terrain.ts"
+      ],
+      "acceptance_js": "const m=load('src/rooms/terrain.ts');assert.equal(m.TRAP_PERIOD,4);assert.equal(m.TRAP_ACTIVE_AT,2.8);assert.equal(m.zoneActive({roomTime:2.7}),false);assert.equal(m.zoneActive({roomTime:2.9}),true);assert.equal(m.zoneActive({roomTime:4}),false);assert.ok(read('src/rooms/terrain.ts').includes('w.roomTime % TRAP_PERIOD >= TRAP_ACTIVE_AT'));",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "src/rooms/terrain.ts",
+        "old": "export function zoneActive(w: World) {\n  return w.roomTime % 4 >= 2.8;",
+        "new": "export const TRAP_PERIOD = 4;\nexport const TRAP_ACTIVE_AT = 2.8;\nexport function zoneActive(w: World) {\n  return w.roomTime % TRAP_PERIOD >= TRAP_ACTIVE_AT;"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-030-refactor-beam-width",
+      "description": "Export LASER_HALF_WIDTH and make laserGeometry consume that constant.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Refactor",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/combat/geometry.ts"
+      ],
+      "acceptance_js": "const m=load('src/combat/geometry.ts');assert.equal(m.LASER_HALF_WIDTH,14);assert.equal(m.laserGeometry({x:0,y:0,aimX:1,aimY:0,state:'telegraph'}).halfWidth,14);assert.ok(read('src/combat/geometry.ts').includes('halfWidth: LASER_HALF_WIDTH'));",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "src/combat/geometry.ts",
+        "old": "halfWidth: 14,",
+        "new": "halfWidth: LASER_HALF_WIDTH,"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      },
+      "extra_reference_patch": {
+        "path": "src/combat/geometry.ts",
+        "old": "export function laserGeometry",
+        "new": "export const LASER_HALF_WIDTH = 14;\nexport function laserGeometry"
+      }
+    },
+    {
+      "task_id": "arc-031-refactor-starting-coins",
+      "description": "Export STARTING_COINS=8 and reference it from startingWallet, retaining preparation bonuses.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Refactor",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/economy/catalog.ts"
+      ],
+      "acceptance_js": "const m=load('src/economy/catalog.ts');assert.equal(m.STARTING_COINS,8);assert.equal(m.startingWallet({vitality:0,flask:0,stipend:2}).coins,20);assert.ok(read('src/economy/catalog.ts').includes('coins: STARTING_COINS +'));",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "src/economy/catalog.ts",
+        "old": "coins: 8 +",
+        "new": "coins: STARTING_COINS +"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      },
+      "extra_reference_patch": {
+        "path": "src/economy/catalog.ts",
+        "old": "export const startingWallet",
+        "new": "export const STARTING_COINS = 8;\nexport const startingWallet"
+      }
+    },
+    {
+      "task_id": "arc-032-refactor-base-damage",
+      "description": "Export BASE_DAMAGE=16 and have baseStats use it without sharing mutable state.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Refactor",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/combat/rules.ts"
+      ],
+      "acceptance_js": "const m=load('src/combat/rules.ts');assert.equal(m.BASE_DAMAGE,16);assert.equal(m.baseStats().damage,16);assert.notEqual(m.baseStats(),m.baseStats());assert.ok(read('src/combat/rules.ts').includes('damage: BASE_DAMAGE'));",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "src/combat/rules.ts",
+        "old": "damage: 16,",
+        "new": "damage: BASE_DAMAGE,"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      },
+      "extra_reference_patch": {
+        "path": "src/combat/rules.ts",
+        "old": "export const baseStats",
+        "new": "export const BASE_DAMAGE = 16;\nexport const baseStats"
+      }
+    },
+    {
+      "task_id": "arc-033-performance-segment-sqrt",
+      "description": "Remove the square-root calculation in segmentHits while preserving strict tangent and nonpositive-radius behavior. Do not claim a speedup without measurement.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Performance",
+      "difficulty": "medium",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/combat/rules.ts"
+      ],
+      "acceptance_js": "const {segmentHits}=load('src/combat/rules.ts');for(let x=-20;x<120;x++)for(const r of [-2,0,1,5]){const near=Math.max(0,Math.min(100,x));assert.equal(segmentHits(0,0,100,0,x,3,r),Math.hypot(near-x,3)<r);}assert.ok(!read('src/combat/rules.ts').includes('return Math.hypot(ax +'));",
+      "assertion_summary": "560 boundary comparisons plus removal of the targeted square-root call; no measured latency claim",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "src/combat/rules.ts",
+        "old": "return Math.hypot(ax + dx * t - x, ay + dy * t - y) < r;",
+        "new": "const ex = ax + dx * t - x, ey = ay + dy * t - y;\n  return r > 0 && ex * ex + ey * ey < r * r;"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-034-performance-block-sqrt",
+      "description": "Replace blocked's distance square root with squared distance while preserving strict tangency and nonpositive radii.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Performance",
+      "difficulty": "medium",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "src/rooms/terrain.ts"
+      ],
+      "acceptance_js": "const {blocked}=load('src/rooms/terrain.ts');const b=[{x:10,y:10,w:20,h:20}];for(let x=0;x<40;x++)for(const r of [-1,0,1,5]){const dx=x-Math.max(10,Math.min(30,x));assert.equal(blocked(x,15,r,b),Math.abs(dx)<r);}assert.ok(!read('src/rooms/terrain.ts').includes('Math.hypot(x - clamp'));",
+      "assertion_summary": "160 boundary comparisons plus elimination of the targeted square-root call; no measured latency claim",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "src/rooms/terrain.ts",
+        "old": "(b) =>\n      Math.hypot(x - clamp(x, b.x, b.x + b.w), y - clamp(y, b.y, b.y + b.h)) <\n      radius,",
+        "new": "(b) => {\n      const dx = x - clamp(x, b.x, b.x + b.w);\n      const dy = y - clamp(y, b.y, b.y + b.h);\n      return radius > 0 && dx * dx + dy * dy < radius * radius;\n    },"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-035-document-wallet-contract",
+      "description": "Add docs/contracts/wallet.json documenting all wallet caps and default resources. The document must match executable catalog exports exactly.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Documentation + Code Consistency",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "docs/contracts/wallet.json"
+      ],
+      "acceptance_js": "const m=load('src/economy/catalog.ts');const d=JSON.parse(read('docs/contracts/wallet.json'));assert.deepEqual(d.limits,m.LIMITS);assert.deepEqual(d.start,m.startingWallet());",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "docs/contracts/wallet.json",
+        "old": "",
+        "new": "{\n  \"limits\": {\n    \"coins\": 999,\n    \"keys\": 9,\n    \"bombs\": 9,\n    \"tonics\": 3,\n    \"shards\": 999\n  },\n  \"start\": {\n    \"coins\": 8,\n    \"keys\": 1,\n    \"bombs\": 2,\n    \"tonics\": 1,\n    \"shards\": 0\n  }\n}\n"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    },
+    {
+      "task_id": "arc-036-document-boss-contract",
+      "description": "Add docs/contracts/bosses.json listing the four unlock-gating bosses in catalog order. Verify consistency from actual BOSSES, not prose inference.",
+      "repository": "https://github.com/QiQiyzhu/arc-shift",
+      "repository_commit": "b17f4c24cf95a02d3197ec493026b6f23c8f2c3e",
+      "origin": "human-designed-contract-exercise",
+      "category": "Documentation + Code Consistency",
+      "difficulty": "easy",
+      "acceptance_tests": [
+        "node evaluation/acceptance.cjs <workspace> <task-json>",
+        "npm run test",
+        "npm run typecheck"
+      ],
+      "required_files": [
+        "docs/contracts/bosses.json"
+      ],
+      "acceptance_js": "const m=load('src/progression/catalog.ts');const d=JSON.parse(read('docs/contracts/bosses.json'));assert.deepEqual(d.bosses,m.BOSSES);assert.deepEqual(d.relicBosses,m.RELICS.filter(r=>r.boss).map(r=>r.boss));",
+      "assertion_summary": "Independent behavioral assertions against the candidate source",
+      "setup_patch": null,
+      "reference_patch": {
+        "path": "docs/contracts/bosses.json",
+        "old": "",
+        "new": "{\n  \"bosses\": [\n    \"warden\",\n    \"matron\",\n    \"forgemaster\",\n    \"oracle\"\n  ],\n  \"relicBosses\": [\n    \"warden\",\n    \"matron\",\n    \"forgemaster\",\n    \"oracle\"\n  ]\n}\n"
+      },
+      "model_results": {
+        "status": "not_run",
+        "reason": "No paid API invocation is authorized or required for harness validation"
+      }
+    }
+  ]
+}

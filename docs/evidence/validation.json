@@ -1,0 +1,372 @@
+{
+  "record_kind": "actual-local-check-results",
+  "platform": "Windows",
+  "python": "3.12.14",
+  "node": "24.16.0",
+  "backend_passed": 57,
+  "backend_skipped": 1,
+  "backend_failed": 0,
+  "backend_cases": [
+    {
+      "name": "test_api_end_to_end_sse_reconnection_and_retry",
+      "class": "backend.tests.test_api",
+      "duration_seconds": 2.353,
+      "status": "passed"
+    },
+    {
+      "name": "test_api_rejects_external_repo_origin_and_bad_request",
+      "class": "backend.tests.test_api",
+      "duration_seconds": 0.173,
+      "status": "passed"
+    },
+    {
+      "name": "test_optional_api_auth",
+      "class": "backend.tests.test_api",
+      "duration_seconds": 0.171,
+      "status": "passed"
+    },
+    {
+      "name": "test_structured_retrieval_prefers_relevant_symbol",
+      "class": "backend.tests.test_context_memory",
+      "duration_seconds": 0.02,
+      "status": "passed"
+    },
+    {
+      "name": "test_context_records_failures_and_redacts_secrets",
+      "class": "backend.tests.test_context_memory",
+      "duration_seconds": 0.007,
+      "status": "passed"
+    },
+    {
+      "name": "test_memory_scope_provenance_and_invalidation",
+      "class": "backend.tests.test_context_memory",
+      "duration_seconds": 0.058,
+      "status": "passed"
+    },
+    {
+      "name": "test_untrusted_guess_is_never_retrieved",
+      "class": "backend.tests.test_context_memory",
+      "duration_seconds": 0.06,
+      "status": "passed"
+    },
+    {
+      "name": "test_code_review_skill_really_denies_edits",
+      "class": "backend.tests.test_context_memory",
+      "duration_seconds": 0.02,
+      "status": "passed"
+    },
+    {
+      "name": "test_native_end_to_end_with_real_tests_and_isolation",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 2.047,
+      "status": "passed"
+    },
+    {
+      "name": "test_mcp_end_to_end_uses_real_stdio_transport",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 2.918,
+      "status": "passed"
+    },
+    {
+      "name": "test_replay_provider_reexecutes_real_tools",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 3.618,
+      "status": "passed"
+    },
+    {
+      "name": "test_skill_prevents_patch_before_reproduction",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 0.58,
+      "status": "passed"
+    },
+    {
+      "name": "test_repair_is_bounded_after_verifier_rejects",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 0.712,
+      "status": "passed"
+    },
+    {
+      "name": "test_max_steps",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 0.467,
+      "status": "passed"
+    },
+    {
+      "name": "test_context_overflow",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 0.446,
+      "status": "passed"
+    },
+    {
+      "name": "test_task_timeout",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 0.342,
+      "status": "passed"
+    },
+    {
+      "name": "test_cancel_active_task",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 0.841,
+      "status": "passed"
+    },
+    {
+      "name": "test_provider_retries_without_fake_fallback",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 2.513,
+      "status": "passed"
+    },
+    {
+      "name": "test_missing_real_key_fails_explicitly",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 0.609,
+      "status": "passed"
+    },
+    {
+      "name": "test_no_verifier_does_not_claim_success",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 1.618,
+      "status": "passed"
+    },
+    {
+      "name": "test_memory_disabled_writes_nothing",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 2.467,
+      "status": "passed"
+    },
+    {
+      "name": "test_untracked_new_file_is_in_diff",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 2.037,
+      "status": "passed"
+    },
+    {
+      "name": "test_approval_gate_waits_for_explicit_decision",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 0.496,
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace_retains_gitignore_but_excludes_env",
+      "class": "backend.tests.test_harness",
+      "duration_seconds": 2.38,
+      "status": "passed"
+    },
+    {
+      "name": "test_real_adapter_validates_http_payload_and_usage",
+      "class": "backend.tests.test_provider",
+      "duration_seconds": 0.002,
+      "status": "passed"
+    },
+    {
+      "name": "test_provider_errors_do_not_leak_keys[401]",
+      "class": "backend.tests.test_provider",
+      "duration_seconds": 0.002,
+      "status": "passed"
+    },
+    {
+      "name": "test_provider_errors_do_not_leak_keys[429]",
+      "class": "backend.tests.test_provider",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_provider_errors_do_not_leak_keys[500]",
+      "class": "backend.tests.test_provider",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_malformed_provider_action_fails",
+      "class": "backend.tests.test_provider",
+      "duration_seconds": 0.003,
+      "status": "passed"
+    },
+    {
+      "name": "test_path_boundary[../outside.txt]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_path_boundary[x/../../outside]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_path_boundary[.env]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.002,
+      "status": "passed"
+    },
+    {
+      "name": "test_path_boundary[.env.local]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_path_boundary[.git/config]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.007,
+      "status": "passed"
+    },
+    {
+      "name": "test_path_boundary[C:/Windows/win.ini]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_path_boundary[x:stream]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.002,
+      "status": "passed"
+    },
+    {
+      "name": "test_path_boundary[/etc/passwd]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.002,
+      "status": "passed"
+    },
+    {
+      "name": "test_path_boundary[x\\\\..\\\\a]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_path_boundary[.ssh/id_rsa]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_symlinks_rejected",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.002,
+      "status": "skipped"
+    },
+    {
+      "name": "test_command_allowlist[command0]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_command_allowlist[command1]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.002,
+      "status": "passed"
+    },
+    {
+      "name": "test_command_allowlist[command2]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_command_allowlist[command3]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_command_allowlist[command4]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.002,
+      "status": "passed"
+    },
+    {
+      "name": "test_command_allowlist[command5]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_command_allowlist[command6]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_command_allowlist[command7]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_command_allowlist[command8]",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.002,
+      "status": "passed"
+    },
+    {
+      "name": "test_tests_require_trust",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_secrets_are_redacted_and_not_in_child_environment",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.0,
+      "status": "passed"
+    },
+    {
+      "name": "test_timeout_kills_process",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.764,
+      "status": "passed"
+    },
+    {
+      "name": "test_output_limit_drains_noisy_child",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.098,
+      "status": "passed"
+    },
+    {
+      "name": "test_cancel_stops_child",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 1.104,
+      "status": "passed"
+    },
+    {
+      "name": "test_patch_is_exact_and_deletion_requires_approval",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.015,
+      "status": "passed"
+    },
+    {
+      "name": "test_router_does_not_read_secrets",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.006,
+      "status": "passed"
+    },
+    {
+      "name": "test_redacted_structures_preserve_json_envelopes",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.001,
+      "status": "passed"
+    },
+    {
+      "name": "test_patch_preserves_crlf_to_keep_diff_scoped",
+      "class": "backend.tests.test_security",
+      "duration_seconds": 0.025,
+      "status": "passed"
+    }
+  ],
+  "browser_stats": {
+    "startTime": "2026-09-10T05:12:12.373Z",
+    "duration": 46424.872,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "frontend_unit_tests": 4,
+  "real_provider_runs": 0,
+  "docker_local_status": "not_run: Docker executable unavailable",
+  "ci_remote_status": "pending first repository push",
+  "note": "The Windows skip is a symlink privilege check; it is not counted as passed. No paid API or model performance result is implied."
+}
