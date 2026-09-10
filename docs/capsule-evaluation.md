@@ -67,6 +67,8 @@ Artifacts: controls.json, comparison.json, run/calls.jsonl and per-task SQLite t
 
 ## Interview explanation
 
+Pre-paid review found two concrete accounting defects: a grading timeout could replace an actor row and lose its observed usage in the summary; a later storage error could replace an existing checkpoint. Both were reproduced without network calls and fixed. Summaries now recover each trial's accounting from the durable ledger, all 12 denominator rows exist before execution, and later infrastructure errors retain earlier results/source. A third check binds direct CLI execution to the frozen image digest. Four regression tests cover these paths; no task or oracle was changed in response to a model score.
+
 “I separated execution authority from grading authority. The actor edits one file; generated code cannot see host credentials or final expectations. I froze six public tasks and two equal-budget context configurations, retaining failed attempts. A timeout is inconclusive, not a mutation kill. Runtime withholding protects a run, but public tasks do not establish unseen-data generalization.”
 
 Read capsule_eval.py for freezing, accounting and paired order; capsule_sandbox.py for mounts/process cleanup; harness.py for the adapter seam; and test_capsule_eval.py for adversarial contracts. Explain why readonly oracle files still leak answers, why reserving before HTTP matters, and why fewer prompt tokens help only when acceptance is preserved.

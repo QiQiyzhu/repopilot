@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from repopilot.capsule_eval import (
@@ -12,6 +13,7 @@ from repopilot.capsule_eval import (
     digest,
     json_equal,
     load_pack,
+    main,
     main_async,
     materialize,
     run_trial,
@@ -238,3 +240,97 @@ async def test_full_harness_uses_restricted_adapter_and_never_sends_oracle(tmp_p
         assert Path(row['task']['workspace']).parent != tmp_path
     finally:
         ledger.file.close()
+
+
+@pytest.fixture
+def injected_batch(tmp_path, monkeypatch):
+    _, _, lock = load_pack()
+    image_ref = 'python@' + lock['docker_image'].split('@')[1]
+    class ReadySandbox:
+        calls = 0
+        def __init__(self, *args):
+            pass
+        async def preflight(self):
+            return {'RepoDigests': [image_ref]}
+    class Observed:
+        config = SimpleNamespace(public_status=lambda: {'flavor': 'injected-test'})
+        async def complete(self, messages, max_tokens):
+            return ModelReply(action=Action(kind='finish', summary='injected'),
+                              usage=Usage(input_tokens=17, output_tokens=3))
+    monkeypatch.setattr('repopilot.capsule_eval.DockerSandbox', ReadySandbox)
+    monkeypatch.setattr('repopilot.capsule_eval.OpenAIProvider', Observed)
+    monkeypatch.setattr('repopilot.capsule_eval.source_receipt', lambda: {
+        'git_commit': 'reviewed', 'working_tree_dirty': False})
+    async def actor(task, profile, root, sandbox, ledger, provider):
+        trial = task['id'] + '--' + profile
+        await LedgerProvider(provider, ledger, trial).complete([], 100)
+        return {'trial_id': trial, 'task_id': task['id'], 'profile': profile,
+                'actor_status': 'succeeded', 'original_files_preserved': True,
+                'candidate': 'unexecuted injected candidate'}
+    monkeypatch.setattr('repopilot.capsule_eval.run_trial', actor)
+    return argparse.Namespace(execute=True, controls=False, image='sha256:' + 'a'*64,
+                              expected_commit='reviewed', data=tmp_path/'run', output=tmp_path/'result.json')
+
+
+async def test_grading_timeout_preserves_paid_actor_usage_and_all_trial_denominators(injected_batch, monkeypatch):
+    async def fail_grade(*args):
+        raise TimeoutError('injected grading timeout')
+    monkeypatch.setattr('repopilot.capsule_eval.grade', fail_grade)
+    report = await main_async(injected_batch)
+    assert report['provider_calls'] == 12 and report['observed_tokens'] == 240
+    assert len(report['rows']) == 12
+    for summary in report['summary'].values():
+        assert summary['trials'] == 6 and summary['provider_calls'] == 6
+        assert summary['observed_input_tokens'] == 102 and summary['observed_output_tokens'] == 18
+        assert summary['passed'] == 0
+    assert all(row['actor_status'] == 'succeeded' for row in report['rows'])
+
+
+def test_later_infrastructure_failure_preserves_checkpoint_and_unstarted_rows(injected_batch, monkeypatch):
+    from repopilot import capsule_eval
+    original = capsule_eval.run_trial
+    count = 0
+    async def fail_later(*args):
+        nonlocal count
+        count += 1
+        if count == 2:
+            raise OSError('injected storage outage')
+        return await original(*args)
+    async def accepted(*args):
+        return {'passed': True}
+    monkeypatch.setattr(capsule_eval, 'run_trial', fail_later)
+    monkeypatch.setattr(capsule_eval, 'grade', accepted)
+    monkeypatch.setattr('sys.argv', ['capsule-eval', '--execute', '--expected-commit', 'reviewed',
+                                  '--image', injected_batch.image, '--data', str(injected_batch.data),
+                                  '--output', str(injected_batch.output)])
+    with pytest.raises(SystemExit) as caught:
+        main()
+    assert caught.value.code == 1
+    report = json.loads(injected_batch.output.read_text())
+    assert report['status'] == 'infrastructure_error'
+    assert report['source']['git_commit'] == 'reviewed' and len(report['rows']) == 12
+    assert report['provider_calls'] == 1 and report['observed_tokens'] == 20
+    assert report['rows'][0]['passed'] is True
+    assert report['rows'][1]['status'] == 'infrastructure_error'
+    assert all(row['status'] == 'not_started' for row in report['rows'][2:])
+    assert report['summary']['full']['trials'] == report['summary']['compact']['trials'] == 6
+
+
+async def test_cli_rejects_image_outside_frozen_digest_before_provider_setup(injected_batch, monkeypatch):
+    async def wrong_image(self):
+        return {'RepoDigests': ['python@sha256:' + 'f' * 64]}
+    def forbidden():
+        raise AssertionError('Provider constructed before image validation')
+    monkeypatch.setattr('repopilot.capsule_eval.DockerSandbox.preflight', wrong_image)
+    monkeypatch.setattr('repopilot.capsule_eval.OpenAIProvider', forbidden)
+    with pytest.raises(ValueError, match='frozen pack digest'):
+        await main_async(injected_batch)
+
+
+def test_cli_never_overwrites_a_previous_receipt(tmp_path, monkeypatch):
+    output = tmp_path / 'prior.json'
+    output.write_text('{"original":true}')
+    monkeypatch.setattr('sys.argv', ['capsule-eval', '--data', str(tmp_path/'new'), '--output', str(output)])
+    with pytest.raises(SystemExit) as caught:
+        main()
+    assert caught.value.code == 2 and output.read_text() == '{"original":true}'

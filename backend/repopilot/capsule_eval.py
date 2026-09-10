@@ -153,6 +153,21 @@ class CallLedger:
         self.observed_tokens = 0
         self.unknown_usage = False
         self.started = time.monotonic()
+        self.path = path
+
+    def trial_accounting(self, trial: str) -> dict[str, Any]:
+        events = [json.loads(line) for line in self.path.read_text(encoding="utf-8").splitlines()]
+        selected = [event for event in events if event.get("trial") == trial]
+        reserved = {event["call_id"] for event in selected if event["event"] == "reserved"}
+        observed = [event for event in selected if event["event"] == "observed"]
+        costs = [event["usage"]["cost_usd"] for event in observed]
+        return {
+            "provider_calls": len(reserved),
+            "usage": {"input_tokens": sum(event["usage"]["input_tokens"] for event in observed),
+                      "output_tokens": sum(event["usage"]["output_tokens"] for event in observed),
+                      "cost_usd": sum(costs) if costs and all(cost is not None for cost in costs) else None},
+            "unknown_billed_usage": bool(reserved - {event["call_id"] for event in observed}),
+        }
 
     def append(self, event: dict[str, Any]) -> None:
         self.file.write(json.dumps({"at": now(), **event}, ensure_ascii=False) + "\n")
@@ -334,17 +349,32 @@ async def main_async(args: argparse.Namespace) -> dict[str, Any]:
     root.mkdir(parents=True, exist_ok=False)
     sandbox = DockerSandbox(args.image, root / "sandbox")
     report["environment"]["container"] = await sandbox.preflight()
+    frozen_digest = lock["docker_image"].split("@", 1)[1]
+    if not any(item.endswith("@" + frozen_digest)
+               for item in report["environment"]["container"].get("RepoDigests", []) or []):
+        raise ValueError("Container image does not match the frozen pack digest")
     if args.controls:
         return {**report, **await controls(sandbox, tasks, oracle)}
     provider = OpenAIProvider()  # Explicit --execute only, controller env only.
     report["configuration"] = provider.config.public_status()
     report["status"] = "running"
-    report["rows"] = []
+    schedule = [
+        (task, profile) for index, task in enumerate(tasks["tasks"])
+        for profile in (["full", "compact"] if index % 2 == 0 else ["compact", "full"])
+    ]
+    report["rows"] = [
+        {"trial_id": task["id"] + "--" + profile, "task_id": task["id"],
+         "profile": profile, "passed": False, "status": "not_started"}
+        for task, profile in schedule
+    ]
+    report["summary"] = summarize(report["rows"])
+    write_json(args.output, redact_data(report))
     ledger = CallLedger(root / "calls.jsonl")
     try:
         # Counterbalance execution order; no fresh process inherits prior trial memory.
-        for index, task in enumerate(tasks["tasks"]):
-            for profile in (["full", "compact"] if index % 2 == 0 else ["compact", "full"]):
+        for index, (task, profile) in enumerate(schedule):
+            row = report["rows"][index]
+            try:
                 try:
                     remaining = LIMITS["batch_seconds"] - (time.monotonic() - ledger.started)
                     if remaining <= 0 or ledger.unknown_usage:
@@ -358,10 +388,16 @@ async def main_async(args: argparse.Namespace) -> dict[str, Any]:
                                               and row["original_files_preserved"]
                                               and row.get("independent_verdict", {}).get("passed"))
                 except (ProviderError, TimeoutError) as error:
-                    row = {"trial_id": task["id"] + "--" + profile, "task_id": task["id"],
-                           "profile": profile, "passed": False, "status": "not_completed",
-                           "error": type(error).__name__ + ": " + str(error)}
-                report["rows"].append(row)
+                    row.update(passed=False, status="not_completed",
+                               error=type(error).__name__ + ": " + str(error))
+            except Exception as error:
+                row.update(passed=False, status="infrastructure_error",
+                           error=type(error).__name__ + ": " + str(error))
+                report["status"] = "infrastructure_error"
+                raise
+            finally:
+                row.update(ledger.trial_accounting(row["trial_id"]))
+                report["rows"][index] = row
                 report["provider_calls"] = ledger.calls
                 report["observed_tokens"] = ledger.observed_tokens
                 report["unknown_billed_usage"] = ledger.unknown_usage
@@ -385,10 +421,15 @@ def main() -> None:
     parser.add_argument("--data", type=Path, required=True, help="New output directory; reruns cannot overwrite")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    if args.output.exists():
+        parser.error("Output already exists; preserve previous evidence and choose a new path")
     try:
         report = asyncio.run(main_async(args))
     except (ValueError, OSError, RuntimeError) as error:
-        report = {"status": "infrastructure_error", "error": type(error).__name__ + ": " + str(error)}
+        # This invocation alone owns this path. Keep completed rows/source/accounting
+        # from its latest checkpoint if a later setup, grading or storage step fails.
+        report = json.loads(args.output.read_text(encoding="utf-8")) if args.output.exists() else {}
+        report.update(status="infrastructure_error", error=type(error).__name__ + ": " + str(error))
     write_json(args.output, report)
     print(json.dumps({k: v for k, v in report.items() if k in {"status", "provider_calls", "summary", "error"}}))
     raise SystemExit(0 if report["status"] in {"dry_run", "passed", "completed"} else 1)

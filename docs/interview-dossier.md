@@ -121,7 +121,7 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 
 | Executed check | Actual result | Scope / evidence |
 |---|---|---|
-| Python backend full suite | 113 passed, 1 skipped | 新增 20 个 capsule 契约；Windows symlink 权限 skip；[实际记录](evidence/capsule-local-validation.json) |
+| Python backend full suite | 117 passed, 1 skipped | 新增 24 个 capsule 契约；Windows symlink 权限 skip；[实际记录](evidence/capsule-local-validation.json) |
 | Actual DeepSeek authored task | 1 accepted / 4 model calls | 3 pytest pass，独立复验；输入 10,277 / 输出 323 tokens；单个可见测试 fixture |
 | Final API/MCP/archive targeted checks | 5 passed | 配置模块改动之后；后续 API annotation 检查 3 passed |
 | Frontend unit | 4 passed | API 边界、错误、真实空值等 |

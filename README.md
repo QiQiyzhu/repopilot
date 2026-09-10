@@ -46,7 +46,7 @@ flowchart TD
 
 | Experiment | Observed result | What it means |
 |---|---|---|
-| Backend checks | **113 pass, 1 Windows privilege skip** | Includes 20 capsule isolation, accounting and grading contracts; [actual local record](docs/evidence/capsule-local-validation.json) |
+| Backend checks | **117 pass, 1 Windows privilege skip** | Includes 24 capsule isolation, accounting and grading contracts; [actual local record](docs/evidence/capsule-local-validation.json) |
 | Frontend checks | **4 unit + 7 browser checks pass** | Six real-backend workflows plus one intercepted DeepSeek submission contract; no paid CI requests |
 | Docker Compose runtime | **Startup + backend restart pass** | Actual task/verification/diff/SSE through Nginx on 8080; [raw evidence](docs/container-runtime.md) |
 | ARC task contracts | **36 / 36** positive/negative controls validated | Tasks have executable discriminating acceptance criteria |

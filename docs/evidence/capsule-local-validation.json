@@ -1,17 +1,18 @@
 {
   "evidence_type": "actual-local-tests",
   "platform": "Windows",
-  "tests": 114,
-  "passed": 113,
+  "tests": 118,
+  "passed": 117,
   "skipped": 1,
   "failures": 0,
   "errors": 0,
-  "seconds": 26.29,
+  "seconds": 24.247,
   "ruff": "passed",
   "mypy_source_files": 24,
-  "new_capsule_contract_tests": 20,
+  "new_capsule_contract_tests": 24,
   "paid_model_calls": 0,
   "docker_controls": "not_run_locally_docker_unavailable",
-  "raw_junit_sha256": "40e280158e8c96306f7927782c43b258dc7434dc58de685d34ec69b102daf66e",
-  "initial_failures_retained": "An initial skill-registry regression was fixed by keeping capsule skills separate. A later pytest basetemp parent-directory setup error is retained outside the repo. This final suite ran after both fixes."
+  "raw_junit_sha256": "86f17590ff7dd66fe9b0fb19e4e9c5c65d91d071b380a2651f9cd182fa221a4d",
+  "initial_failures_retained": "An initial skill-registry regression was fixed by keeping capsule skills separate. A later pytest basetemp parent-directory setup error is retained outside the repo. This final suite ran after both fixes.",
+  "pre_paid_review": "Three issues fixed before any real-model run: grading-timeout accounting, checkpoint preservation, and direct CLI frozen-image validation. Independent AI-assisted read-only review reran 24 contract tests successfully."
 }
