@@ -1,0 +1,127 @@
+[
+  {
+    "file": "change.patch",
+    "bytes": 320,
+    "sha256": "77d7ae36a67aa01ef35dfc67ac4cc220a004174d3c10424f9ef5f577f3f3ffdb"
+  },
+  {
+    "file": "cleanup.log",
+    "bytes": 514,
+    "sha256": "c5a60736205232bc1f54fea0bd2ee6f1a9f984600898132ff58f1fc7927c6814"
+  },
+  {
+    "file": "compose-status.json",
+    "bytes": 2484,
+    "sha256": "f2a11fd97df76eacbbfd2277cbe23abd89ddedc0a89fef2a46abc1369749887f"
+  },
+  {
+    "file": "compose.log",
+    "bytes": 10082,
+    "sha256": "85a5dbb892570f2b6f5cde598174247bcd8501f6038506c3558108ff18ccf73f"
+  },
+  {
+    "file": "context.json",
+    "bytes": 4890,
+    "sha256": "309af16586fbcd8f416213ab7c7a34b93188bef07f7c1ef9266f9306bf4da26c"
+  },
+  {
+    "file": "created-task.json",
+    "bytes": 1437,
+    "sha256": "3d26939357c8e3a2811a83ac1ed8f1afd6380549a49775bd203fa181d6cde219"
+  },
+  {
+    "file": "events.sse",
+    "bytes": 10299,
+    "sha256": "8c8bccd74597ced1cdbaeb15a612a37c120a51270fe2db484636031b59879c83"
+  },
+  {
+    "file": "frontend-0.js",
+    "bytes": 218477,
+    "sha256": "22e1a1dd5fb4f8fc2b2bf017a448dac2c068e1d59679d272bc6d7f3889600645"
+  },
+  {
+    "file": "frontend.html",
+    "bytes": 418,
+    "sha256": "e1c72bf3eab5a194be8112ca615e3a3ba79f7c3e26aa3dd81a4cc19ae6a4d356"
+  },
+  {
+    "file": "health-wait-errors.json",
+    "bytes": 69,
+    "sha256": "303050f8ff6f7660ff0ab173f67d726c07b4a8bc58aac18133a0ca2da69646c5"
+  },
+  {
+    "file": "health.json",
+    "bytes": 244,
+    "sha256": "1f102c1a5f8de94ffb7a460d3e4a75dd3b6c78c5b1cfdfdbc8520dc9d87ecbc3"
+  },
+  {
+    "file": "restart-events.sse",
+    "bytes": 10299,
+    "sha256": "8c8bccd74597ced1cdbaeb15a612a37c120a51270fe2db484636031b59879c83"
+  },
+  {
+    "file": "restart-polls.json",
+    "bytes": 82,
+    "sha256": "581ecb2575126003d4bcd9f6e966ca7685ea103e57df0f24a836521d40f2a0b4"
+  },
+  {
+    "file": "restart-summary.json",
+    "bytes": 12982,
+    "sha256": "c529a0aca55f1158f705b5071038bf2fe9c18a3af8a23a7f96b5a0e8c727a1fe"
+  },
+  {
+    "file": "restart-task-list.json",
+    "bytes": 12686,
+    "sha256": "c43d68a09649a179924c90f48fde265f430223a32402d737cb6e1de414d2c5ed"
+  },
+  {
+    "file": "restart.log",
+    "bytes": 89,
+    "sha256": "0406f21ed184e48a462c7b0e12bcfd69ab83678fdd052126a7ea76ddc2312863"
+  },
+  {
+    "file": "restarted-task.json",
+    "bytes": 22411,
+    "sha256": "6a0a34830dd38a8c0c020230dc816063929765682f24e480b0e1b6d1bbe99a82"
+  },
+  {
+    "file": "restarted.patch",
+    "bytes": 320,
+    "sha256": "77d7ae36a67aa01ef35dfc67ac4cc220a004174d3c10424f9ef5f577f3f3ffdb"
+  },
+  {
+    "file": "skills.json",
+    "bytes": 2128,
+    "sha256": "8ea8cbf507a112800b6ea8c6c7896ae49cf085f471f54ac2e1f69320c713808f"
+  },
+  {
+    "file": "startup.log",
+    "bytes": 778,
+    "sha256": "2a1c40981622c29acc42bec03752ba7cb796cb3b79c1c724fa8d6bfb4a287619"
+  },
+  {
+    "file": "submitted-request.json",
+    "bytes": 710,
+    "sha256": "2e8e814b61982c0e8ec06fff3964fdfc631d9f8931b30f61bbc2dd7fb9302756"
+  },
+  {
+    "file": "summary.json",
+    "bytes": 16080,
+    "sha256": "26b96286754788195bf837592dbf0031f493bd7f6517cc084374d4288bf2aba5"
+  },
+  {
+    "file": "task-list.json",
+    "bytes": 12686,
+    "sha256": "c43d68a09649a179924c90f48fde265f430223a32402d737cb6e1de414d2c5ed"
+  },
+  {
+    "file": "task-polls.json",
+    "bytes": 393,
+    "sha256": "aeefebdc8b38251e8c89e62b9af33c799cdc4b2dbcfd0d82865768f7e041c2b4"
+  },
+  {
+    "file": "task.json",
+    "bytes": 22411,
+    "sha256": "6a0a34830dd38a8c0c020230dc816063929765682f24e480b0e1b6d1bbe99a82"
+  }
+]

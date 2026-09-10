@@ -10,3 +10,6 @@
 *.sh text eol=lf
 *.png binary
 *.webm binary
+# Preserve captured wire/log bytes; SSE event boundaries include a final blank line.
+docs/evidence/container-runtime/*.sse -text whitespace=-blank-at-eof
+docs/evidence/container-runtime/*.log -text whitespace=-blank-at-eol

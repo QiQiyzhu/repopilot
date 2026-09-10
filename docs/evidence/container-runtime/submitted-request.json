@@ -1,0 +1,35 @@
+{
+  "repository": "/workspace/.repopilot/demo-repository",
+  "task": "Fix clamp so interior and both boundary cases pass",
+  "provider": "fake",
+  "transport": "mcp",
+  "allow_repository_code": true,
+  "budget": {
+    "timeout_seconds": 120,
+    "max_steps": 12
+  },
+  "acceptance": {
+    "checks": [
+      {
+        "name": "container-clamp-tests",
+        "command": [
+          "python",
+          "-m",
+          "pytest",
+          "-q",
+          "test_calculator.py"
+        ],
+        "layer": "unit"
+      }
+    ],
+    "expected_files": [
+      "calculator.py"
+    ],
+    "contains": {
+      "calculator.py": [
+        "return max(low, min(high, value))"
+      ]
+    },
+    "require_diff": true
+  }
+}

@@ -107,7 +107,7 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 
 路径守卫拒绝 absolute / traversal / ADS / symlink 和敏感目录，归档展开也受同一边界约束。shell=False 使用显式 argv；命令 allowlist 只允许指定 checks。执行仓库代码必须显式 trust-code。删除需审批，code-review skill 禁止写入，patch 要求唯一匹配。secret 在结构化叶节点脱敏；子进程环境不继承 provider key。
 
-这是一层应用策略，**不是 OS sandbox**：可信仓库的 pytest 仍可运行代码。Docker 有非 root、只读 rootfs、drop capabilities 等配置，但未本机运行。公开多租户之前需要逐任务 VM/container 强隔离、认证授权、网络出口、secret broker、ownership 和资源配额。没有把普通 CORS 当身份认证。
+这是一层应用策略，**不是 OS sandbox**：可信仓库的 pytest 仍可运行代码。Docker 有非 root、只读 rootfs、drop capabilities 等配置，并通过了真实 Linux CI 容器运行验收；Windows 开发机没有安装 Docker。公开多租户之前需要逐任务 VM/container 强隔离、认证授权、网络出口、secret broker、ownership 和资源配额。没有把普通 CORS 当身份认证。
 
 ## J. Test 数量与实际结果
 
@@ -122,7 +122,7 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 | npm audit | 0 vulnerabilities | 验证时实际结果，不代表永久安全 |
 | Pinned ARC regression | 92 tests + typecheck + build passed | 只读源提交的独立 archive |
 
-完整证据、命令和限制见 [verification.md](verification.md)。Docker 本地不可用；实际 Linux [CI run 34444225871](https://github.com/QiQiyzhu/repopilot/actions/runs/34444225871) 已通过后端、前端和 Docker 镜像构建，包含 6 项真实服务浏览器流程。构建镜像不等于生产容器运行验收。
+完整证据、命令和限制见 [verification.md](verification.md)。实际 Linux [CI run 34445670524](https://github.com/QiQiyzhu/repopilot/actions/runs/34445670524) 通过 58 项后端测试、6 项真实服务浏览器流程和真实 Docker Compose 运行验收。容器验收从 8080 的 Nginx 代理提交 MCP task，要求失败复现、修复后 pytest 的 3 项检查通过、真实 diff 与 verifier；重启后同一 task 和 diff 仍然存在，并保存原始 JSON/SSE/Compose logs。详见 [container-runtime.md](container-runtime.md)。这不是生产负载或多租户安全认证。
 
 ## K. RAG Benchmark 真实结果
 
@@ -156,7 +156,7 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 
 ## O. 尚未完成的问题
 
-真实付费 LLM benchmark 未运行；semantic RAG 和 retrieval 指标未实现；生产多租户 sandbox 未实现；Docker 运行验收未做（远端镜像构建和 CI 已通过）；没有并发压力和统计性能结论；SQLite 没有 schema migration / event retention；无完整 prompt release registry；Windows symlink 安全测试因权限 skip。真实 API 执行需要用户提供合法环境配置并授权费用。这些是简历边界，不能靠措辞抹掉。
+真实付费 LLM benchmark 未运行；semantic RAG 和 retrieval 指标未实现；生产多租户 sandbox 未实现；没有并发压力和统计性能结论；SQLite 没有 schema migration / event retention；无完整 prompt release registry；Windows symlink 安全测试因权限 skip（Linux CI 已通过该检查）。Docker 镜像构建及真实启动/MCP/重启持久化验收已经完成，不应继续列为未完成。真实 API 执行需要用户提供合法环境配置并授权费用。这些是简历边界，不能靠措辞抹掉。
 
 ## P. 10 个必须逐行读懂的 Backend 文件
 
@@ -229,6 +229,6 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 - 实现 native tools 与真实 MCP stdio server/client，结合独立 Git snapshot、命令 allowlist、路径守卫、人工删除审批和实际 verifier；明确区分应用权限边界与 OS sandbox。
 - 围绕 ARC//SHIFT 固定提交设计 36 项独立 acceptance 合同，全部通过负例失败/参考修改成功验证，其中 6 项补测试任务拒绝指定 mutant；基线 92 项回归测试、类型检查和构建通过。
 - 实现带 provenance 和预算的代码上下文选择、严格版本隔离 memory 及五组 harness 配置，执行已知 fixture 对照并公开真实 LLM benchmark 未运行的边界。
-- 建立前后端验证与可审计演示，实际通过 4 项前端单元测试、6 项真实服务浏览器测试，提供审批、MCP trace、diff、verification、30.12 秒实际录屏及 Docker/CI 配置。
+- 建立前后端验证与可审计演示，实际通过 4 项前端单元测试、6 项真实服务浏览器测试及 Linux Docker Compose 运行验收；通过 Nginx 代理验证 MCP 修复、可执行验收和重启后的任务持久化，保存原始 JSON 与容器日志。
 
 使用前再次复验仓库对应提交。不要将“production-oriented”改成“已生产部署”，不要添加未测量的用户数、QPS、准确率提升或效率收益。

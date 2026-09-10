@@ -1,0 +1,442 @@
+{
+  "status": "passed",
+  "phase": "after-backend-restart",
+  "source": "Actual HTTP requests through built Nginx and FastAPI containers",
+  "provider": "deterministic-fake; harness validation, not LLM performance",
+  "created_at": "2026-09-10T06:33:27.458966+00:00",
+  "commit": "75759baf3686784a03613f01627a467c01605839",
+  "ci_run_id": "34445670524",
+  "base_url": "http://127.0.0.1:8080",
+  "task_id": "d18ccdd0-bfb3-4889-ba3d-141988804f85",
+  "elapsed_ms": 1056.65,
+  "checks": [
+    {
+      "name": "response size bounded",
+      "passed": true,
+      "detail": "health.json"
+    },
+    {
+      "name": "response size bounded",
+      "passed": true,
+      "detail": "health.json"
+    },
+    {
+      "name": "API is reached through Nginx",
+      "passed": true,
+      "detail": "nginx/1.28.3"
+    },
+    {
+      "name": "container workspace root",
+      "passed": true,
+      "detail": {
+        "status": "ok",
+        "version": "0.1.0",
+        "demo_repository": "/workspace/.repopilot/demo-repository",
+        "repository_root": "/workspace",
+        "real_provider_configured": false,
+        "default_provider": "fake",
+        "sandbox": "application-boundary; trusted-repository-code only"
+      }
+    },
+    {
+      "name": "known demo repository exists",
+      "passed": true,
+      "detail": {
+        "status": "ok",
+        "version": "0.1.0",
+        "demo_repository": "/workspace/.repopilot/demo-repository",
+        "repository_root": "/workspace",
+        "real_provider_configured": false,
+        "default_provider": "fake",
+        "sandbox": "application-boundary; trusted-repository-code only"
+      }
+    },
+    {
+      "name": "response size bounded",
+      "passed": true,
+      "detail": "frontend.html"
+    },
+    {
+      "name": "frontend HTML served",
+      "passed": true,
+      "detail": {
+        "Server": "nginx/1.28.3",
+        "Date": "Thu, 10 Sep 2026 06:33:27 GMT",
+        "Content-Type": "text/html",
+        "Content-Length": "418",
+        "Last-Modified": "Thu, 10 Sep 2026 06:32:58 GMT",
+        "Connection": "close",
+        "ETag": "\"6aa24f1a-1a2\"",
+        "Accept-Ranges": "bytes"
+      }
+    },
+    {
+      "name": "production JS asset referenced",
+      "passed": true,
+      "detail": [
+        "/assets/index-BbXGc9CQ.js"
+      ]
+    },
+    {
+      "name": "frontend asset is local",
+      "passed": true,
+      "detail": "/assets/index-BbXGc9CQ.js"
+    },
+    {
+      "name": "response size bounded",
+      "passed": true,
+      "detail": "frontend-0.js"
+    },
+    {
+      "name": "JS asset is actual JavaScript, not SPA fallback",
+      "passed": true,
+      "detail": "application/javascript"
+    },
+    {
+      "name": "response size bounded",
+      "passed": true,
+      "detail": "restarted-task.json"
+    },
+    {
+      "name": "api/tasks/d18ccdd0-bfb3-4889-ba3d-141988804f85 returns 200",
+      "passed": true,
+      "detail": 200
+    },
+    {
+      "name": "task succeeded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "executable verifier passed",
+      "passed": true,
+      "detail": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "container-clamp-tests",
+            "layer": "unit",
+            "ok": true,
+            "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+            "error": null,
+            "exit_code": 0,
+            "truncated": false,
+            "duration_ms": 283.54191900000103,
+            "requires_approval": false
+          },
+          {
+            "name": "diff-review",
+            "layer": "repository",
+            "ok": true,
+            "output": "diff --git a/calculator.py b/calculator.py\nindex f41d0c3..8413909 100644\n--- a/calculator.py\n+++ b/calculator.py\n@@ -1,3 +1,3 @@\n \"\"\"Deliberately broken fixture used only for deterministic harness validation.\"\"\"\n def clamp(value, low, high):\n-    return max(low, max(high, value))\n+    return max(low, min(high, value))\n",
+            "truncated": false
+          },
+          {
+            "name": "changed:calculator.py",
+            "layer": "acceptance",
+            "ok": true
+          },
+          {
+            "name": "contract:calculator.py",
+            "layer": "acceptance",
+            "ok": true
+          },
+          {
+            "name": "skill:unit",
+            "layer": "acceptance",
+            "ok": true
+          }
+        ],
+        "changed_files": [
+          "calculator.py"
+        ],
+        "evidence_source": "process-exit-codes-and-file-contracts",
+        "model_judge": false
+      }
+    },
+    {
+      "name": "container pytest acceptance actually executed",
+      "passed": true,
+      "detail": [
+        {
+          "name": "container-clamp-tests",
+          "layer": "unit",
+          "ok": true,
+          "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+          "error": null,
+          "exit_code": 0,
+          "truncated": false,
+          "duration_ms": 283.54191900000103,
+          "requires_approval": false
+        },
+        {
+          "name": "diff-review",
+          "layer": "repository",
+          "ok": true,
+          "output": "diff --git a/calculator.py b/calculator.py\nindex f41d0c3..8413909 100644\n--- a/calculator.py\n+++ b/calculator.py\n@@ -1,3 +1,3 @@\n \"\"\"Deliberately broken fixture used only for deterministic harness validation.\"\"\"\n def clamp(value, low, high):\n-    return max(low, max(high, value))\n+    return max(low, min(high, value))\n",
+          "truncated": false
+        },
+        {
+          "name": "changed:calculator.py",
+          "layer": "acceptance",
+          "ok": true
+        },
+        {
+          "name": "contract:calculator.py",
+          "layer": "acceptance",
+          "ok": true
+        },
+        {
+          "name": "skill:unit",
+          "layer": "acceptance",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "name": "all acceptance checks passed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "diff survives backend restart unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact repair in final diff",
+      "passed": true,
+      "detail": "diff --git a/calculator.py b/calculator.py\nindex f41d0c3..8413909 100644\n--- a/calculator.py\n+++ b/calculator.py\n@@ -1,3 +1,3 @@\n \"\"\"Deliberately broken fixture used only for deterministic harness validation.\"\"\"\n def clamp(value, low, high):\n-    return max(low, max(high, value))\n+    return max(low, min(high, value))\n"
+    },
+    {
+      "name": "only intended file changed",
+      "passed": true,
+      "detail": [
+        "calculator.py"
+      ]
+    },
+    {
+      "name": "real MCP read and diff succeeded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "MCP reproduced failing tests before successful repair",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "fake provenance remains explicit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "response size bounded",
+      "passed": true,
+      "detail": "restart-task-list.json"
+    },
+    {
+      "name": "api/tasks returns 200",
+      "passed": true,
+      "detail": 200
+    },
+    {
+      "name": "persisted task appears in API list",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "response size bounded",
+      "passed": true,
+      "detail": "restart-events.sse"
+    },
+    {
+      "name": "SSE passes through reverse proxy",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "response size bounded",
+      "passed": true,
+      "detail": "context.json"
+    },
+    {
+      "name": "api/tasks/d18ccdd0-bfb3-4889-ba3d-141988804f85/context returns 200",
+      "passed": true,
+      "detail": 200
+    },
+    {
+      "name": "response size bounded",
+      "passed": true,
+      "detail": "skills.json"
+    },
+    {
+      "name": "api/skills returns 200",
+      "passed": true,
+      "detail": 200
+    },
+    {
+      "name": "packaged skills loaded inside image",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "responses": [
+    {
+      "url": "http://127.0.0.1:8080/api/health",
+      "method": "GET",
+      "status": 502,
+      "headers": {
+        "Server": "nginx/1.28.3",
+        "Date": "Thu, 10 Sep 2026 06:33:26 GMT",
+        "Content-Type": "text/html",
+        "Content-Length": "157",
+        "Connection": "close"
+      },
+      "body_file": "health.json",
+      "bytes": 157,
+      "duration_ms": 21.69
+    },
+    {
+      "url": "http://127.0.0.1:8080/api/health",
+      "method": "GET",
+      "status": 200,
+      "headers": {
+        "Server": "nginx/1.28.3",
+        "Date": "Thu, 10 Sep 2026 06:33:27 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "244",
+        "Connection": "close",
+        "access-control-allow-origin": "http://127.0.0.1:8080",
+        "vary": "Origin"
+      },
+      "body_file": "health.json",
+      "bytes": 244,
+      "duration_ms": 13.1
+    },
+    {
+      "url": "http://127.0.0.1:8080/",
+      "method": "GET",
+      "status": 200,
+      "headers": {
+        "Server": "nginx/1.28.3",
+        "Date": "Thu, 10 Sep 2026 06:33:27 GMT",
+        "Content-Type": "text/html",
+        "Content-Length": "418",
+        "Last-Modified": "Thu, 10 Sep 2026 06:32:58 GMT",
+        "Connection": "close",
+        "ETag": "\"6aa24f1a-1a2\"",
+        "Accept-Ranges": "bytes"
+      },
+      "body_file": "frontend.html",
+      "bytes": 418,
+      "duration_ms": 0.9
+    },
+    {
+      "url": "http://127.0.0.1:8080/assets/index-BbXGc9CQ.js",
+      "method": "GET",
+      "status": 200,
+      "headers": {
+        "Server": "nginx/1.28.3",
+        "Date": "Thu, 10 Sep 2026 06:33:27 GMT",
+        "Content-Type": "application/javascript",
+        "Content-Length": "218477",
+        "Last-Modified": "Thu, 10 Sep 2026 06:32:58 GMT",
+        "Connection": "close",
+        "ETag": "\"6aa24f1a-3556d\"",
+        "Accept-Ranges": "bytes"
+      },
+      "body_file": "frontend-0.js",
+      "bytes": 218477,
+      "duration_ms": 1.11
+    },
+    {
+      "url": "http://127.0.0.1:8080/api/tasks/d18ccdd0-bfb3-4889-ba3d-141988804f85",
+      "method": "GET",
+      "status": 200,
+      "headers": {
+        "Server": "nginx/1.28.3",
+        "Date": "Thu, 10 Sep 2026 06:33:27 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "22411",
+        "Connection": "close",
+        "access-control-allow-origin": "http://127.0.0.1:8080",
+        "vary": "Origin"
+      },
+      "body_file": "restarted-task.json",
+      "bytes": 22411,
+      "duration_ms": 3.72
+    },
+    {
+      "url": "http://127.0.0.1:8080/api/tasks",
+      "method": "GET",
+      "status": 200,
+      "headers": {
+        "Server": "nginx/1.28.3",
+        "Date": "Thu, 10 Sep 2026 06:33:27 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "12686",
+        "Connection": "close",
+        "access-control-allow-origin": "http://127.0.0.1:8080",
+        "vary": "Origin"
+      },
+      "body_file": "restart-task-list.json",
+      "bytes": 12686,
+      "duration_ms": 2.48
+    },
+    {
+      "url": "http://127.0.0.1:8080/api/tasks/d18ccdd0-bfb3-4889-ba3d-141988804f85/events",
+      "method": "GET",
+      "status": 200,
+      "headers": {
+        "Server": "nginx/1.28.3",
+        "Date": "Thu, 10 Sep 2026 06:33:27 GMT",
+        "Content-Type": "text/event-stream; charset=utf-8",
+        "Transfer-Encoding": "chunked",
+        "Connection": "close",
+        "cache-control": "no-cache",
+        "access-control-allow-origin": "http://127.0.0.1:8080",
+        "vary": "Origin"
+      },
+      "body_file": "restart-events.sse",
+      "bytes": 10299,
+      "duration_ms": 6.69
+    },
+    {
+      "url": "http://127.0.0.1:8080/api/tasks/d18ccdd0-bfb3-4889-ba3d-141988804f85/context",
+      "method": "GET",
+      "status": 200,
+      "headers": {
+        "Server": "nginx/1.28.3",
+        "Date": "Thu, 10 Sep 2026 06:33:27 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "4890",
+        "Connection": "close",
+        "access-control-allow-origin": "http://127.0.0.1:8080",
+        "vary": "Origin"
+      },
+      "body_file": "context.json",
+      "bytes": 4890,
+      "duration_ms": 2.78
+    },
+    {
+      "url": "http://127.0.0.1:8080/api/skills",
+      "method": "GET",
+      "status": 200,
+      "headers": {
+        "Server": "nginx/1.28.3",
+        "Date": "Thu, 10 Sep 2026 06:33:27 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "2128",
+        "Connection": "close",
+        "access-control-allow-origin": "http://127.0.0.1:8080",
+        "vary": "Origin"
+      },
+      "body_file": "skills.json",
+      "bytes": 2128,
+      "duration_ms": 1.83
+    }
+  ],
+  "error": null,
+  "diff_sha256": "77d7ae36a67aa01ef35dfc67ac4cc220a004174d3c10424f9ef5f577f3f3ffdb"
+}

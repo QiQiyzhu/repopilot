@@ -1,6 +1,6 @@
 # RepoPilot
 
-[![Evidence checks](https://github.com/QiQiyzhu/repopilot/actions/workflows/ci.yml/badge.svg)](https://github.com/QiQiyzhu/repopilot/actions/workflows/ci.yml) · [A–T interview dossier](docs/interview-dossier.md) · [Verified fullstack Linux CI](https://github.com/QiQiyzhu/repopilot/actions/runs/34444225871)
+[![Evidence checks](https://github.com/QiQiyzhu/repopilot/actions/workflows/ci.yml/badge.svg)](https://github.com/QiQiyzhu/repopilot/actions/workflows/ci.yml) · [A–T interview dossier](docs/interview-dossier.md) · [Verified Linux fullstack + container runtime](https://github.com/QiQiyzhu/repopilot/actions/runs/34445670524)
 
 **A production-oriented coding agent harness and evaluation lab.** Submit a Git task, inspect the actual tool trace, and accept a change only when executable evidence passes. Python 3.12 · FastAPI · React · SQLite · MCP.
 
@@ -44,6 +44,7 @@ flowchart TD
 |---|---|---|
 | Backend checks | **57 pass, 1 Windows privilege skip** | Lifecycle, safety, context, provider, MCP and API contracts |
 | Frontend checks | **4 unit + 6 real-backend browser workflows pass** | UI and execution evidence agree |
+| Docker Compose runtime | **Startup + backend restart pass** | Actual task/verification/diff/SSE through Nginx on 8080; [raw evidence](docs/container-runtime.md) |
 | ARC task contracts | **36 / 36** positive/negative controls validated | Tasks have executable discriminating acceptance criteria |
 | Add-test adequacy | **6 / 6** supplied incorrect behaviors rejected | Reference tests detect the intended mutation |
 | Pinned ARC baseline | **92 tests**, typecheck and build pass | The archived evaluation baseline is viable |
@@ -70,7 +71,7 @@ One-command container startup (Docker Compose required):
 docker compose up --build
 ```
 
-Open **http://localhost:8080**, then **Run MCP demo**. The API listens on localhost:8000; source workspaces persist in a named volume. Docker configuration is supplied and CI builds it; the development host has no Docker executable, so no local container runtime result is claimed.
+Open **http://localhost:8080**, then **Run MCP demo**. The API listens on localhost:8000; source workspaces persist in a named volume. [Actual Linux CI acceptance](docs/container-runtime.md) starts both images, executes a verified MCP fixture repair through the 8080 reverse proxy, and checks the same task and diff after a backend restart. The Windows development host has no Docker executable; these are real remote CI results.
 
 Native development (Python 3.12 and Node 22):
 

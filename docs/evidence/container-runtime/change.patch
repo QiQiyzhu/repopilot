@@ -1,0 +1,9 @@
+diff --git a/calculator.py b/calculator.py
+index f41d0c3..8413909 100644
+--- a/calculator.py
++++ b/calculator.py
+@@ -1,3 +1,3 @@
+ """Deliberately broken fixture used only for deterministic harness validation."""
+ def clamp(value, low, high):
+-    return max(low, max(high, value))
++    return max(low, min(high, value))
