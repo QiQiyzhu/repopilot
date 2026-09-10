@@ -1,0 +1,17 @@
+{
+  "evidence_type": "actual-local-tests",
+  "platform": "Windows",
+  "tests": 114,
+  "passed": 113,
+  "skipped": 1,
+  "failures": 0,
+  "errors": 0,
+  "seconds": 26.29,
+  "ruff": "passed",
+  "mypy_source_files": 24,
+  "new_capsule_contract_tests": 20,
+  "paid_model_calls": 0,
+  "docker_controls": "not_run_locally_docker_unavailable",
+  "raw_junit_sha256": "40e280158e8c96306f7927782c43b258dc7434dc58de685d34ec69b102daf66e",
+  "initial_failures_retained": "An initial skill-registry regression was fixed by keeping capsule skills separate. A later pytest basetemp parent-directory setup error is retained outside the repo. This final suite ran after both fixes."
+}

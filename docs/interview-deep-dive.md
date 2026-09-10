@@ -1,5 +1,7 @@
 # RepoPilot：把“绿灯”讲成可核验的判断
 
+新增工程案例：[冻结开发 capsule](capsule-evaluation.md)。从一份真实修复扩展到 6 个冻结任务与两种上下文配置时，先解决 oracle 不进入候选执行空间、代码只能在受限 Docker 里运行、调用前记账和未知账单停止。对应代码为 `capsule_eval.py`、`capsule_sandbox.py`；这不意味着已有 held-out 泛化成绩。真实结果以协议链接中的实际 receipt 为准。
+
 这份讲解围绕[实际决策案例](decision-case-study.md)，不是一张新增功能清单。措辞使用 AI-assisted，只有在本人读过源码、重跑过案例并能解释结果后，才采用第一人称。原 A–T 手册保持不变。
 
 ## 30 秒：一个问题和一个证据

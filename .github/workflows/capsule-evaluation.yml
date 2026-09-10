@@ -1,0 +1,65 @@
+name: Frozen capsule comparison (paid opt-in)
+on:
+  workflow_dispatch:
+    inputs:
+      expected_commit:
+        description: Reviewed full SHA; must equal this workflow revision
+        required: true
+        type: string
+      model:
+        description: Explicit DeepSeek model identifier (recorded in receipts)
+        required: true
+        default: deepseek-flash
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: paid-capsule-evaluation
+  cancel-in-progress: false
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - name: Require the operator-reviewed revision
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_commit }}
+          WORKFLOW_SHA: ${{ github.sha }}
+        run: |
+          [[ "$EXPECTED_SHA" =~ ^[a-f0-9]{40}$ ]]
+          test "$EXPECTED_SHA" = "$WORKFLOW_SHA"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --require-hashes -r requirements.lock && pip install --no-deps -e .
+      - name: Pull the frozen public execution image
+        run: |
+          image_ref=$(python -c "import json; print(json.load(open('evaluation/capsules/v1/freeze.json'))['docker_image'])")
+          docker pull "$image_ref"
+          image_id=$(docker image inspect "$image_ref" --format '{{.Id}}')
+          echo "CAPSULE_IMAGE_ID=$image_id" >> "$GITHUB_ENV"
+      - name: Verify references, negative controls and execution boundary without a model
+        run: |
+          python -m repopilot.capsule_eval --controls --image "$CAPSULE_IMAGE_ID" \
+            --data "$RUNNER_TEMP/capsule-controls" --output "$RUNNER_TEMP/capsule-evidence/controls.json"
+      - name: Run the fixed 12-trial comparison with controller-only credentials
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.COMPETITION_DEEPSEEK_API_KEY }}
+          DEEPSEEK_MODEL: ${{ inputs.model }}
+          REPOPILOT_PROVIDER_FLAVOR: deepseek
+          EXPECTED_SHA: ${{ inputs.expected_commit }}
+        run: |
+          if [ -z "$DEEPSEEK_API_KEY" ]; then
+            echo 'Missing dedicated COMPETITION_DEEPSEEK_API_KEY; no model calls were made.'
+            exit 1
+          fi
+          python -m repopilot.capsule_eval --execute --expected-commit "$EXPECTED_SHA" \
+            --image "$CAPSULE_IMAGE_ID" --data "$RUNNER_TEMP/capsule-evidence/run" \
+            --output "$RUNNER_TEMP/capsule-evidence/comparison.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frozen-capsule-evidence
+          path: ${{ runner.temp }}/capsule-evidence/
+          retention-days: 30

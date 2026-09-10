@@ -40,6 +40,7 @@ class Harness:
         repository_root: Path,
         skills: Path,
         workspace_initializer: Callable[[Path], Awaitable[None]] | None = None,
+        router_factory: Callable[[Path, list[str] | None], ToolRouter] | None = None,
     ):
         self.data = data.resolve()
         self.store = SQLiteStore(data / "repopilot.sqlite")
@@ -50,6 +51,7 @@ class Harness:
         self.routers: dict[str, ToolRouter] = {}
         self.max_parallel = asyncio.Semaphore(2)
         self.workspace_initializer = workspace_initializer
+        self.router_factory = router_factory
 
     def recover_interrupted(self) -> None:
         for task in self.store.list_tasks():
@@ -160,10 +162,17 @@ class Harness:
                     await self.workspace_initializer(Path(task.workspace))
                 provider = provider or self.provider(task)
                 skill = self.registry.get(task.request.skill)
-                router = ToolRouter(
-                    Path(task.workspace),
-                    allow_repository_code=task.request.allow_repository_code,
-                    allowed_tools=skill.allowed_tools if skill else None,
+                if self.router_factory and task.request.transport != "native":
+                    raise ValueError("Custom execution boundary requires native transport")
+                allowed = skill.allowed_tools if skill else None
+                router = (
+                    self.router_factory(Path(task.workspace), allowed)
+                    if self.router_factory
+                    else ToolRouter(
+                        Path(task.workspace),
+                        allow_repository_code=task.request.allow_repository_code,
+                        allowed_tools=allowed,
+                    )
                 )
                 self.routers[task.task_id] = router
                 self.transition(

@@ -3,6 +3,27 @@ on: [push, pull_request]
 permissions:
   contents: read
 jobs:
+  capsule-controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --require-hashes -r requirements.lock && pip install --no-deps -e .
+      - name: Frozen public development execution controls (zero model calls)
+        run: |
+          image_ref=$(python -c "import json; print(json.load(open('evaluation/capsules/v1/freeze.json'))['docker_image'])")
+          docker pull "$image_ref"
+          image_id=$(docker image inspect "$image_ref" --format '{{.Id}}')
+          python -m repopilot.capsule_eval --controls --image "$image_id" \
+            --data "$RUNNER_TEMP/capsule-controls" --output "$RUNNER_TEMP/capsule-evidence/controls.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capsule-control-evidence
+          path: ${{ runner.temp }}/capsule-evidence/
   backend:
     runs-on: ubuntu-latest
     steps:

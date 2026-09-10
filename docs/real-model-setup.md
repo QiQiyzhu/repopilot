@@ -1,5 +1,7 @@
 # DeepSeek: explicit, bounded real-model access
 
+For the frozen six-task, two-condition comparison with Docker-isolated execution and controller-only API credentials, follow [the capsule evaluation protocol](capsule-evaluation.md). It is a separate manual, paid opt-in workflow; the normal app and the historical single-task smoke below retain their original scope.
+
 RepoPilot uses the same structured `Action` contract for remote models, Fake and Replay. The documented cloud setup is **DeepSeek**. The existing run selector is still named `openai` for compatibility with saved requests; it selects the HTTP adapter, while `REPOPILOT_PROVIDER_FLAVOR=deepseek` selects DeepSeek's endpoint and payload. It does not send a DeepSeek request to OpenAI.
 
 The default demo and CI use no cloud credentials. A configured provider does not start requests automatically. Neither a connectivity check nor a nonce response measures coding ability; the 36-task, five-profile real-model ablation remains a separate experiment.

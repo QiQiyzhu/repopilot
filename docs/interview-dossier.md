@@ -2,6 +2,8 @@
 
 定位：production-oriented coding agent harness，供本地可信代码仓库使用。项目由 AI 辅助实现；候选人必须实际运行并读懂下列代码。它没有生产用户，没有真实模型解题率结论，也不是强隔离的多租户执行平台。
 
+本轮新增 [冻结开发评估协议](capsule-evaluation.md)：6 个公开任务 × full/compact 两个条件，39 个运行时不提供给 actor 的验收用例。真正的 Harness 使用受限 Docker 执行代码，oracle 留在 controller；公共任务不是 held-out。真实模型结果待实际运行后填写，不能把零模型 controls 写成模型成绩。讲解重点是执行与判定权限分离、调用前持久化预留、失败保留，以及冻结后不按分数修改测试。
+
 ## A. 最终系统架构
 
 ```mermaid
@@ -97,6 +99,8 @@ Provider protocol 解耦 Fake / Replay / OpenAI compatible HTTP 调用。当前�
 
 项目具备 trace、可配置 benchmark、版本固定的任务和可切换 harness profile，但没有完整 prompt registry、在线 A/B 发布、模型训练或生产 drift monitoring。CI 不调用付费 API。真实 provider benchmark 提供显式 opt-in CLI，尚未执行。
 
+常规 push CI 仍然零付费。新增手动 capsule workflow 仅在操作者审阅 exact SHA 并提供临时专用 secret 后运行；full=naive/6000，compact=structured/900，其余任务、模型与动作预算相同。这是配置整体对照，不能把差异单独归因于排序。每次调用前 fsync reservation，失联/取消保留 unknown usage 并停止后续付费请求，不能把账单未知写成 0。
+
 另外执行了一次真实 DeepSeek authored clamp 小任务：[完整脱敏 trace](evidence/deepseek-task.json)。四次模型调用自主复现失败、修改、复测、finish；独立 verifier 再次执行 3 项 pytest，并确认测试未改、只有 calculator.py 改动。实测 10,277 input / 323 output tokens、5.437 秒。它证明单个可信 fixture 的模型到执行再到验收链路可运行，不是 36 任务 benchmark，也不构成消融收益。具体配置与次数边界见 [real-model-setup.md](real-model-setup.md)。
 
 应用的 New task 也可直接选择 DeepSeek，health 只返回配置状态、flavor 与 model；未配置时禁用提交。远程表单显式提交 6 steps/calls、16,000 total tokens、180 秒及 0 retries，并允许进一步降低。切换选项不触发请求，密钥只在服务端。浏览器的配置摘要没有声称已验证远端密钥有效性；付费副作用从任务提交开始。
@@ -117,12 +121,12 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 
 | Executed check | Actual result | Scope / evidence |
 |---|---|---|
-| Python backend full suite | 93 passed, 1 skipped | Windows 缺少 symlink 创建权限而 skip；[当前实际记录](evidence/deepseek-validation.json) |
+| Python backend full suite | 113 passed, 1 skipped | 新增 20 个 capsule 契约；Windows symlink 权限 skip；[实际记录](evidence/capsule-local-validation.json) |
 | Actual DeepSeek authored task | 1 accepted / 4 model calls | 3 pytest pass，独立复验；输入 10,277 / 输出 323 tokens；单个可见测试 fixture |
 | Final API/MCP/archive targeted checks | 5 passed | 配置模块改动之后；后续 API annotation 检查 3 passed |
 | Frontend unit | 4 passed | API 边界、错误、真实空值等 |
 | Playwright browser | 7 passed | 6 项真实后端流程，加 1 项截获 DeepSeek POST 的配置与预算契约；CI 不调用付费模型 |
-| Ruff / mypy | passed / 22 source files | backend/repopilot 与 scripts lint |
+| Ruff / mypy | passed / 24 source files | backend/repopilot 与 scripts lint |
 | Typecheck / lint / build | passed | frontend |
 | npm audit | 0 vulnerabilities | 验证时实际结果，不代表永久安全 |
 | Pinned ARC regression | 92 tests + typecheck + build passed | 只读源提交的独立 archive |

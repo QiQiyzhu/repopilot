@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "pack_id": "repopilot-public-dev-capsules-v1",
+  "evidence_scope": "Authored public development set; runtime-withheld oracle, not held-out generalization.",
+  "tasks": [
+    {
+      "id": "retry-policy",
+      "instruction": "Repair solve(p), returning delay seconds or null. p contains integer status, attempt (1-based number of the just-completed call), max_attempts >= 1, remaining_seconds >= 0, and optional retry_after >= 0 or null. Retry only status 408, 429, 500, 502, 503, 504, only if attempt < max_attempts. Delay is min(8, 2**(attempt-1)), unless retry_after is supplied, then use that value unmodified. Retry only if delay < remaining_seconds (strict). Inputs satisfy these types and are finite; do not mutate p.",
+      "initial": "def solve(p):\n    if p['status'] >= 400 and p['attempt'] <= p['max_attempts']:\n        return min(8, 2 ** (p['attempt'] - 1))\n    return None\n",
+      "visible": [
+        [
+          {
+            "status": 429,
+            "attempt": 1,
+            "max_attempts": 3,
+            "remaining_seconds": 10
+          },
+          1
+        ],
+        [
+          {
+            "status": 401,
+            "attempt": 1,
+            "max_attempts": 3,
+            "remaining_seconds": 10
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "id": "sliding-quota",
+      "instruction": "Repair solve(p), returning {admit:boolean, remaining:integer}. p has nonnegative integer now, positive integer window, nonnegative integer limit and requested; events is a list of [timestamp, tokens] with nonnegative integers and timestamps <= now, possibly unordered. Used tokens include exactly events with now-window < timestamp <= now; boundary events at now-window expire. Return remaining=max(0, limit-used) BEFORE admission; admit iff requested <= remaining. Do not mutate events.",
+      "initial": "def solve(p):\n    used = sum(tokens for timestamp, tokens in p['events'] if timestamp >= p['now'] - p['window'])\n    remaining = p['limit'] - used\n    return {'admit': p['requested'] < remaining, 'remaining': remaining}\n",
+      "visible": [
+        [
+          {
+            "now": 10,
+            "window": 5,
+            "limit": 10,
+            "requested": 2,
+            "events": [
+              [
+                8,
+                3
+              ]
+            ]
+          },
+          {
+            "admit": true,
+            "remaining": 7
+          }
+        ],
+        [
+          {
+            "now": 10,
+            "window": 5,
+            "limit": 10,
+            "requested": 10,
+            "events": []
+          },
+          {
+            "admit": true,
+            "remaining": 10
+          }
+        ]
+      ]
+    },
+    {
+      "id": "dependency-order",
+      "instruction": "Repair solve(p). p is a JSON object mapping unique job names to lists of dependency names. Return {order:list, blocked:list}. Repeatedly select the earliest-declared currently runnable job (object insertion order), where ALL dependencies have already run; append it and rescan declaration order from the beginning. Duplicate dependencies are harmless. Missing dependencies and cycles block affected jobs and their dependents but do not block unrelated runnable jobs. blocked contains all never-run job names in declaration order. Do not mutate p.",
+      "initial": "def solve(p):\n    order = [name for name in p if not p[name]]\n    order += [name for name in p if name not in order]\n    return {'order': order, 'blocked': []}\n",
+      "visible": [
+        [
+          {
+            "build": [],
+            "test": [
+              "build"
+            ]
+          },
+          {
+            "order": [
+              "build",
+              "test"
+            ],
+            "blocked": []
+          }
+        ],
+        [
+          {
+            "ship": [
+              "missing"
+            ],
+            "lint": []
+          },
+          {
+            "order": [
+              "lint"
+            ],
+            "blocked": [
+              "ship"
+            ]
+          }
+        ]
+      ]
+    },
+    {
+      "id": "path-scope",
+      "instruction": "Repair solve(p), returning whether p (a string) is an allowed repository-relative POSIX path. Split on '/'; ignore empty components and '.' components. Reject empty normalized path, an original leading '/', any '\\\\', any ':', NUL, any '..' component anywhere (do not resolve it), and any component equal to '.git' or '.env', case-insensitively. Allow other Unicode names and names like '.env.example' or 'file..txt'. This is a lexical fixture, not an OS symlink defense; do not access the filesystem.",
+      "initial": "def solve(p):\n    return bool(p) and not p.startswith('/') and '..' not in p\n",
+      "visible": [
+        [
+          "src/app.py",
+          true
+        ],
+        [
+          ".git/config",
+          false
+        ]
+      ]
+    },
+    {
+      "id": "evidence-status",
+      "instruction": "Repair solve(p), classifying a mutation test observation as 'killed', 'survived', or 'inconclusive'. p has baseline_passed (bool), timed_out (bool), exit_code (integer or null), and parsed_tests_failed (nonnegative integer). Only a passing baseline plus a completed run may decide. If timed_out, missing exit code, or exit code not in {0,1}, return inconclusive. Exit 0 with parsed_tests_failed == 0 means survived. Exit 1 with parsed_tests_failed > 0 means killed. Every inconsistent combination is inconclusive. Never treat signals/infrastructure errors as mutation kills.",
+      "initial": "def solve(p):\n    if p['baseline_passed'] and p['exit_code'] != 0:\n        return 'killed'\n    return 'survived'\n",
+      "visible": [
+        [
+          {
+            "baseline_passed": true,
+            "timed_out": false,
+            "exit_code": 1,
+            "parsed_tests_failed": 2
+          },
+          "killed"
+        ],
+        [
+          {
+            "baseline_passed": true,
+            "timed_out": true,
+            "exit_code": 1,
+            "parsed_tests_failed": 2
+          },
+          "inconclusive"
+        ]
+      ]
+    },
+    {
+      "id": "interval-union",
+      "instruction": "Repair solve(p). p is a list of [start,end] integer half-open intervals with start <= end, unsorted and possibly duplicated. Drop empty intervals. Merge overlapping OR touching intervals into sorted disjoint intervals. Return a new list of [start,end] pairs without mutating p. Negative bounds and nested intervals are valid.",
+      "initial": "def solve(p):\n    result = []\n    for start, end in sorted(p):\n        if result and start < result[-1][1]:\n            result[-1][1] = end\n        else:\n            result.append([start, end])\n    return result\n",
+      "visible": [
+        [
+          [
+            [
+              1,
+              3
+            ],
+            [
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              1,
+              3
+            ],
+            [
+              5,
+              7
+            ]
+          ]
+        ],
+        [
+          [
+            [
+              1,
+              3
+            ],
+            [
+              3,
+              5
+            ]
+          ],
+          [
+            [
+              1,
+              5
+            ]
+          ]
+        ]
+      ]
+    }
+  ]
+}

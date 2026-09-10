@@ -1,0 +1,35 @@
+{
+  "pack_id": "repopilot-public-dev-capsules-v1",
+  "frozen_on": "2026-09-10",
+  "classification": "public-authored-development",
+  "runtime_oracle_withheld": true,
+  "oracle_public_in_source": true,
+  "content_sha256": {
+    "tasks.json": "87a577697ac60d63b67e15a6ce3582e60a6325fac4ee5b6a1ab29158b4b8d9cc",
+    "oracle.json": "e302833e0ee8272dec03dadc4112aaa30118294bc12aa0a1c7816c4c2dad62a5"
+  },
+  "profiles": {
+    "full": [
+      "naive",
+      6000
+    ],
+    "compact": [
+      "structured",
+      900
+    ]
+  },
+  "limits": {
+    "calls_per_trial": 6,
+    "total_calls": 72,
+    "output_tokens_per_call": 1536,
+    "observed_tokens_per_trial": 20000,
+    "observed_tokens_total": 250000,
+    "trial_seconds": 90,
+    "batch_seconds": 1200,
+    "provider_retries": 0
+  },
+  "docker_image": "python:3.12.14-slim@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+  "order": "task declaration order; even index full then compact; odd index compact then full",
+  "grading": "all visible tests and all independent runtime-withheld cases, preserved original files, actor succeeded; failed and unstarted rows remain in denominator",
+  "hash_encoding": "UTF-8 json.dumps ensure_ascii=False, insertion order preserved"
+}

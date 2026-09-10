@@ -1,0 +1,527 @@
+{
+  "schema_version": 1,
+  "tasks": {
+    "retry-policy": {
+      "cases": [
+        [
+          {
+            "status": 429,
+            "attempt": 3,
+            "max_attempts": 3,
+            "remaining_seconds": 10
+          },
+          null
+        ],
+        [
+          {
+            "status": 503,
+            "attempt": 2,
+            "max_attempts": 4,
+            "remaining_seconds": 2
+          },
+          null
+        ],
+        [
+          {
+            "status": 500,
+            "attempt": 7,
+            "max_attempts": 9,
+            "remaining_seconds": 9
+          },
+          8
+        ],
+        [
+          {
+            "status": 408,
+            "attempt": 1,
+            "max_attempts": 4,
+            "remaining_seconds": 1,
+            "retry_after": 0
+          },
+          0
+        ],
+        [
+          {
+            "status": 502,
+            "attempt": 1,
+            "max_attempts": 4,
+            "remaining_seconds": 2,
+            "retry_after": 1.5
+          },
+          1.5
+        ],
+        [
+          {
+            "status": 404,
+            "attempt": 1,
+            "max_attempts": 4,
+            "remaining_seconds": 20
+          },
+          null
+        ]
+      ],
+      "reference": "def solve(p):\n    if p['status'] not in (408, 429, 500, 502, 503, 504) or p['attempt'] >= p['max_attempts']:\n        return None\n    delay = p.get('retry_after')\n    if delay is None:\n        delay = min(8, 2 ** (p['attempt'] - 1))\n    return delay if delay < p['remaining_seconds'] else None\n"
+    },
+    "sliding-quota": {
+      "cases": [
+        [
+          {
+            "now": 10,
+            "window": 5,
+            "limit": 10,
+            "requested": 10,
+            "events": [
+              [
+                5,
+                9
+              ]
+            ]
+          },
+          {
+            "admit": true,
+            "remaining": 10
+          }
+        ],
+        [
+          {
+            "now": 10,
+            "window": 5,
+            "limit": 5,
+            "requested": 0,
+            "events": [
+              [
+                9,
+                8
+              ]
+            ]
+          },
+          {
+            "admit": true,
+            "remaining": 0
+          }
+        ],
+        [
+          {
+            "now": 3,
+            "window": 9,
+            "limit": 10,
+            "requested": 2,
+            "events": [
+              [
+                0,
+                3
+              ],
+              [
+                3,
+                5
+              ]
+            ]
+          },
+          {
+            "admit": true,
+            "remaining": 2
+          }
+        ],
+        [
+          {
+            "now": 10,
+            "window": 2,
+            "limit": 10,
+            "requested": 1,
+            "events": [
+              [
+                10,
+                4
+              ],
+              [
+                1,
+                999
+              ],
+              [
+                9,
+                6
+              ]
+            ]
+          },
+          {
+            "admit": false,
+            "remaining": 0
+          }
+        ],
+        [
+          {
+            "now": 0,
+            "window": 1,
+            "limit": 0,
+            "requested": 0,
+            "events": []
+          },
+          {
+            "admit": true,
+            "remaining": 0
+          }
+        ],
+        [
+          {
+            "now": 8,
+            "window": 4,
+            "limit": 20,
+            "requested": 7,
+            "events": [
+              [
+                7,
+                8
+              ],
+              [
+                5,
+                6
+              ],
+              [
+                4,
+                90
+              ]
+            ]
+          },
+          {
+            "admit": false,
+            "remaining": 6
+          }
+        ]
+      ],
+      "reference": "def solve(p):\n    used = sum(tokens for timestamp, tokens in p['events'] if p['now'] - p['window'] < timestamp <= p['now'])\n    remaining = max(0, p['limit'] - used)\n    return {'admit': p['requested'] <= remaining, 'remaining': remaining}\n"
+    },
+    "dependency-order": {
+      "cases": [
+        [
+          {
+            "a": [
+              "b"
+            ],
+            "b": [],
+            "c": []
+          },
+          {
+            "order": [
+              "b",
+              "a",
+              "c"
+            ],
+            "blocked": []
+          }
+        ],
+        [
+          {
+            "a": [
+              "b"
+            ],
+            "b": [
+              "a"
+            ],
+            "c": [],
+            "d": [
+              "c"
+            ]
+          },
+          {
+            "order": [
+              "c",
+              "d"
+            ],
+            "blocked": [
+              "a",
+              "b"
+            ]
+          }
+        ],
+        [
+          {
+            "x": [
+              "x"
+            ]
+          },
+          {
+            "order": [],
+            "blocked": [
+              "x"
+            ]
+          }
+        ],
+        [
+          {
+            "a": [],
+            "b": [
+              "a",
+              "a"
+            ],
+            "c": [
+              "b"
+            ]
+          },
+          {
+            "order": [
+              "a",
+              "b",
+              "c"
+            ],
+            "blocked": []
+          }
+        ],
+        [
+          {
+            "a": [
+              "absent"
+            ],
+            "b": [
+              "a"
+            ],
+            "c": [],
+            "d": [
+              "c"
+            ],
+            "e": [
+              "absent"
+            ]
+          },
+          {
+            "order": [
+              "c",
+              "d"
+            ],
+            "blocked": [
+              "a",
+              "b",
+              "e"
+            ]
+          }
+        ],
+        [
+          {},
+          {
+            "order": [],
+            "blocked": []
+          }
+        ]
+      ],
+      "reference": "def solve(p):\n    order = []\n    done = set()\n    while True:\n        name = next((name for name, deps in p.items() if name not in done and all(dep in done for dep in deps)), None)\n        if name is None:\n            break\n        order.append(name)\n        done.add(name)\n    return {'order': order, 'blocked': [name for name in p if name not in done]}\n"
+    },
+    "path-scope": {
+      "cases": [
+        [
+          "src/../app.py",
+          false
+        ],
+        [
+          "src//./file..txt",
+          true
+        ],
+        [
+          "资料/.env.example",
+          true
+        ],
+        [
+          "src/.ENV",
+          false
+        ],
+        [
+          "D:\\data",
+          false
+        ],
+        [
+          "./",
+          false
+        ],
+        [
+          "src/\u0000name",
+          false
+        ],
+        [
+          "//absolute",
+          false
+        ]
+      ],
+      "reference": "def solve(p):\n    if not p or p.startswith('/') or any(c in p for c in ('\\\\', ':', '\\x00')):\n        return False\n    parts = [part for part in p.split('/') if part not in ('', '.')]\n    return bool(parts) and all(part != '..' and part.lower() not in ('.git', '.env') for part in parts)\n"
+    },
+    "evidence-status": {
+      "cases": [
+        [
+          {
+            "baseline_passed": false,
+            "timed_out": false,
+            "exit_code": 1,
+            "parsed_tests_failed": 1
+          },
+          "inconclusive"
+        ],
+        [
+          {
+            "baseline_passed": true,
+            "timed_out": false,
+            "exit_code": -9,
+            "parsed_tests_failed": 1
+          },
+          "inconclusive"
+        ],
+        [
+          {
+            "baseline_passed": true,
+            "timed_out": false,
+            "exit_code": 2,
+            "parsed_tests_failed": 3
+          },
+          "inconclusive"
+        ],
+        [
+          {
+            "baseline_passed": true,
+            "timed_out": false,
+            "exit_code": null,
+            "parsed_tests_failed": 0
+          },
+          "inconclusive"
+        ],
+        [
+          {
+            "baseline_passed": true,
+            "timed_out": false,
+            "exit_code": 0,
+            "parsed_tests_failed": 0
+          },
+          "survived"
+        ],
+        [
+          {
+            "baseline_passed": true,
+            "timed_out": false,
+            "exit_code": 1,
+            "parsed_tests_failed": 0
+          },
+          "inconclusive"
+        ],
+        [
+          {
+            "baseline_passed": true,
+            "timed_out": false,
+            "exit_code": 0,
+            "parsed_tests_failed": 1
+          },
+          "inconclusive"
+        ]
+      ],
+      "reference": "def solve(p):\n    if not p['baseline_passed'] or p['timed_out']:\n        return 'inconclusive'\n    if p['exit_code'] == 0 and p['parsed_tests_failed'] == 0:\n        return 'survived'\n    if p['exit_code'] == 1 and p['parsed_tests_failed'] > 0:\n        return 'killed'\n    return 'inconclusive'\n"
+    },
+    "interval-union": {
+      "cases": [
+        [
+          [
+            [
+              1,
+              10
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              5,
+              7
+            ]
+          ],
+          [
+            [
+              1,
+              10
+            ]
+          ]
+        ],
+        [
+          [
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          []
+        ],
+        [
+          [
+            [
+              -5,
+              -2
+            ],
+            [
+              -2,
+              0
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          [
+            [
+              -5,
+              0
+            ],
+            [
+              4,
+              5
+            ]
+          ]
+        ],
+        [
+          [
+            [
+              6,
+              8
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              3,
+              7
+            ]
+          ],
+          [
+            [
+              1,
+              8
+            ]
+          ]
+        ],
+        [
+          [
+            [
+              1,
+              4
+            ],
+            [
+              1,
+              4
+            ],
+            [
+              4,
+              4
+            ]
+          ],
+          [
+            [
+              1,
+              4
+            ]
+          ]
+        ],
+        [
+          [],
+          []
+        ]
+      ],
+      "reference": "def solve(p):\n    result = []\n    for start, end in sorted(p):\n        if start == end:\n            continue\n        if result and start <= result[-1][1]:\n            result[-1][1] = max(result[-1][1], end)\n        else:\n            result.append([start, end])\n    return result\n"
+    }
+  }
+}

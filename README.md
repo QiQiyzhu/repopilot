@@ -4,6 +4,8 @@
 
 **A production-oriented coding agent harness and evaluation lab.** Submit a Git task, inspect the actual tool trace, and accept a change only when executable evidence passes. Python 3.12 · FastAPI · React · SQLite · MCP.
 
+**Frozen evaluation capsules:** six authored development tasks, runtime-withheld controller grading, restricted Docker execution and a durable API ledger. A full/compact context comparison runs only on an explicitly reviewed commit. [Protocol and scope](docs/capsule-evaluation.md). Public development data is not held-out generalization evidence; paid results are separate from zero-model CI controls.
+
 **Tests are green. Is the task complete?** Two authored regression tests each pass the full **93-test** ARC suite. An independent mutation check rejects the one that misses a diagonal-distance regression. [Inspect and reproduce the decision case](docs/decision-case-study.md) · [30-second / 3-minute / 8-minute interview walkthrough](docs/interview-deep-dive.md). No model provider is called; this is executable verification evidence, not an LLM score.
 
 [Watch the 30-second local demonstration](docs/assets/demo.webm) · [Inspect the recorded MCP trace](docs/evidence/mcp-trace.json) · [Read the interview guide](docs/interview-guide.md)
@@ -44,7 +46,7 @@ flowchart TD
 
 | Experiment | Observed result | What it means |
 |---|---|---|
-| Backend checks | **93 pass, 1 Windows privilege skip** | Lifecycle, safety, context, provider, MCP, API and negative-control contracts; [latest local record](docs/evidence/deepseek-validation.json) |
+| Backend checks | **113 pass, 1 Windows privilege skip** | Includes 20 capsule isolation, accounting and grading contracts; [actual local record](docs/evidence/capsule-local-validation.json) |
 | Frontend checks | **4 unit + 7 browser checks pass** | Six real-backend workflows plus one intercepted DeepSeek submission contract; no paid CI requests |
 | Docker Compose runtime | **Startup + backend restart pass** | Actual task/verification/diff/SSE through Nginx on 8080; [raw evidence](docs/container-runtime.md) |
 | ARC task contracts | **36 / 36** positive/negative controls validated | Tasks have executable discriminating acceptance criteria |
