@@ -250,7 +250,7 @@ class Harness:
                     break
                 except ProviderError as error:
                     self.event(task, "provider-error", str(error))
-                    if attempt == task.budget.provider_retries:
+                    if not error.retryable or attempt == task.budget.provider_retries:
                         raise
                     await asyncio.sleep(min(0.2 * 2**attempt, 1))
             assert reply
@@ -269,7 +269,13 @@ class Harness:
                 raise ProviderError("cost_budget_exhausted")
             recordings.append(reply.model_dump())
             action = reply.action
-            self.event(task, "action", action.summary, usage=reply.usage)
+            self.event(
+                task,
+                "action",
+                action.summary,
+                usage=reply.usage,
+                input={"provider": reply.provider_metadata} if reply.provider_metadata else None,
+            )
             if action.kind == "plan":
                 task.working_memory["plan"] = action.plan
             elif action.kind == "tool":

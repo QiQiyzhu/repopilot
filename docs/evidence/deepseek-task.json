@@ -1,0 +1,548 @@
+{
+  "recorded_at": "2026-09-10T11:18:14.293685+00:00",
+  "evidence_type": "real-provider-authored-fixture",
+  "is_model_benchmark": false,
+  "provider_calls_attempted": 4,
+  "real_model_runs": 1,
+  "source": {
+    "git_commit": "db80588a485c66b7b2a9322a6f76d6b87ac36e55",
+    "working_tree_dirty": true,
+    "source_sha256_lf": {
+      "providers.py": "f8da2f49833ebf80e425d6887aed0e3640dc756581df823e0d34160cd3726e64",
+      "provider_check.py": "3319bb444038aa33f5d8490f97dbda900fa7af4a354245d16c20b17c36dd58da",
+      "provider_task.py": "5e9ca83b7af5382572588030362f70a728c52ffb0797fe88a24cfed1697aab1e",
+      "harness.py": "3b44f82440bfdb7dd328419064bdb1187767fa4ce2b5fa541d0cb631c4bee119",
+      "models.py": "5b3c922a5640e03976d8786920d796fec9aff7015a7ac2bd5fa086b86e5cc62a",
+      "demo.py": "4716a363b1a26a6333cd7e5782dca9917cdec3f9389243a89909159618a2791d",
+      "verifier.py": "53f84ec92fe221a563490a9e7db0e0cf7c5b8d78cc58af424327232ff8ff241f"
+    }
+  },
+  "limits": {
+    "max_provider_calls": 6,
+    "retries": 0,
+    "max_output_tokens_per_call": 4000,
+    "max_total_observed_tokens": 16000,
+    "max_steps": 6,
+    "timeout_seconds": 180
+  },
+  "limitation": "One authored clamp fixture, visible tests, trusted host code, no random sample or ablation. Acceptance checks executable behavior but not general coding ability. Token/cost stops are observed bounds, not a prepaid lock; interrupted API usage may be unknown.",
+  "configuration": {
+    "configured": true,
+    "credentials_present": true,
+    "flavor": "deepseek",
+    "model": "deepseek-flash",
+    "base_url": "https://api.deepseek.com",
+    "timeout_seconds": 45.0,
+    "output_token_parameter": "max_tokens",
+    "thinking": "disabled",
+    "cost_rates_configured": false,
+    "network_checked": false
+  },
+  "fixture_sha256_lf": {
+    "calculator.py": "f76390ee7aa7d1699b492b8cc921755c8328ae300b0ae97d9588b400a6efe871",
+    "test_calculator.py": "be9e7e136c38a4fd85ea0785bf32f5ac14fea220c63cdb539c509864d530efac",
+    "README.md": "d21916d2354c6b491945241da5170fa6b11b660d4082dd9bd025b934b170b8b0"
+  },
+  "status": "passed",
+  "checks": {
+    "harness_acceptance": true,
+    "original_tests_unchanged": true,
+    "only_expected_file_changed": true
+  },
+  "usage": {
+    "input_tokens": 10277,
+    "output_tokens": 323,
+    "cost_usd": null
+  },
+  "task": {
+    "task_id": "c3e17f56-5f3c-46dc-bc63-3041caadbaf7",
+    "status": "succeeded",
+    "state": "FINISH",
+    "created_at": "2026-09-10T11:18:14.454501+00:00",
+    "finished_at": "2026-09-10T11:18:19.893168+00:00",
+    "repository": "<authored-fixture>",
+    "repository_commit": "cddd32ec0c327a7c957876ae62239bfabc0fc03a",
+    "workspace": "<isolated-workspace>",
+    "request": {
+      "repository": "<authored-fixture>",
+      "task": "Repair the authored clamp fixture so values below the interval clamp to low, values inside are unchanged, and values above clamp to high. Preserve the tests. Use the supplied context, reproduce the failure before patching, and finish within six actions. Do not add unrelated files.",
+      "ref": "HEAD",
+      "provider": "openai",
+      "skill": "bug-fix",
+      "context_strategy": "structured",
+      "memory_enabled": false,
+      "transport": "native",
+      "budget": {
+        "max_steps": 6,
+        "timeout_seconds": 180.0,
+        "max_tokens": 16000,
+        "max_cost_usd": null,
+        "max_repairs": 0,
+        "provider_retries": 0,
+        "context_tokens": 1800
+      },
+      "acceptance": {
+        "checks": [
+          {
+            "name": "authored-clamp-tests",
+            "command": [
+              "python",
+              "-m",
+              "pytest",
+              "-q"
+            ],
+            "layer": "unit"
+          }
+        ],
+        "expected_files": [
+          "calculator.py"
+        ],
+        "contains": {},
+        "require_diff": true
+      },
+      "replay_id": null,
+      "allow_repository_code": true,
+      "use_verifier": true,
+      "use_context": true,
+      "single_shot": false
+    },
+    "budget": {
+      "max_steps": 6,
+      "timeout_seconds": 180.0,
+      "max_tokens": 16000,
+      "max_cost_usd": null,
+      "max_repairs": 0,
+      "provider_retries": 0,
+      "context_tokens": 1800
+    },
+    "step_count": 4,
+    "repair_count": 0,
+    "trace": [
+      {
+        "sequence": 1,
+        "task_id": "c3e17f56-5f3c-46dc-bc63-3041caadbaf7",
+        "timestamp": "2026-09-10T11:18:14.461906+00:00",
+        "state": "UNDERSTAND",
+        "kind": "state",
+        "summary": "Materialize the selected commit in an isolated workspace",
+        "tool": null,
+        "transport": null,
+        "input": null,
+        "result": null,
+        "usage": null,
+        "duration_ms": 0.0
+      },
+      {
+        "sequence": 2,
+        "task_id": "c3e17f56-5f3c-46dc-bc63-3041caadbaf7",
+        "timestamp": "2026-09-10T11:18:14.610507+00:00",
+        "state": "PLAN",
+        "kind": "state",
+        "summary": "Select context, skill permissions, verification requirements and budget",
+        "tool": null,
+        "transport": null,
+        "input": null,
+        "result": null,
+        "usage": null,
+        "duration_ms": 0.0
+      },
+      {
+        "sequence": 3,
+        "task_id": "c3e17f56-5f3c-46dc-bc63-3041caadbaf7",
+        "timestamp": "2026-09-10T11:18:14.623564+00:00",
+        "state": "EXECUTE",
+        "kind": "state",
+        "summary": "Execute structured actions within the selected permission set",
+        "tool": null,
+        "transport": null,
+        "input": null,
+        "result": null,
+        "usage": null,
+        "duration_ms": 0.0
+      },
+      {
+        "sequence": 4,
+        "task_id": "c3e17f56-5f3c-46dc-bc63-3041caadbaf7",
+        "timestamp": "2026-09-10T11:18:15.728679+00:00",
+        "state": "EXECUTE",
+        "kind": "action",
+        "summary": "Reproduce the clamp defect by running the existing tests before patching.",
+        "tool": null,
+        "transport": null,
+        "input": {
+          "provider": {
+            "requested_model": "deepseek-flash",
+            "resolved_model": "deepseek-flash",
+            "request_id": "39102893-3eff-45b6-a680-224c509b1a0f",
+            "flavor": "deepseek"
+          }
+        },
+        "result": null,
+        "usage": {
+          "input_tokens": 837,
+          "output_tokens": 88,
+          "cost_usd": null
+        },
+        "duration_ms": 0.0
+      },
+      {
+        "sequence": 5,
+        "task_id": "c3e17f56-5f3c-46dc-bc63-3041caadbaf7",
+        "timestamp": "2026-09-10T11:18:16.044176+00:00",
+        "state": "EXECUTE",
+        "kind": "tool",
+        "summary": "Reproduce the clamp defect by running the existing tests before patching.",
+        "tool": "run_tests",
+        "transport": "native",
+        "input": {
+          "command": [
+            "python",
+            "-m",
+            "pytest",
+            "-q"
+          ]
+        },
+        "result": {
+          "ok": false,
+          "output": "FFF                                                                      [100%]\r\n================================== FAILURES ===================================\r\n_________________________________ test_inside _________________________________\r\n\r\n    def test_inside():\r\n>       assert clamp(5, 0, 10) == 5\r\nE       assert 10 == 5\r\nE        +  where 10 = clamp(5, 0, 10)\r\n\r\ntest_calculator.py:4: AssertionError\r\n_________________________________ test_below __________________________________\r\n\r\n    def test_below():\r\n>       assert clamp(-3, 0, 10) == 0\r\nE       assert 10 == 0\r\nE        +  where 10 = clamp(-3, 0, 10)\r\n\r\ntest_calculator.py:7: AssertionError\r\n_________________________________ test_above __________________________________\r\n\r\n    def test_above():\r\n>       assert clamp(12, 0, 10) == 10\r\nE       assert 12 == 10\r\nE        +  where 12 = clamp(12, 0, 10)\r\n\r\ntest_calculator.py:10: AssertionError\r\n=========================== short test summary info ===========================\r\nFAILED test_calculator.py::test_inside - assert 10 == 5\r\n +  where 10 = clamp(5, 0, 10)\r\nFAILED test_calculator.py::test_below - assert 10 == 0\r\n +  where 10 = clamp(-3, 0, 10)\r\nFAILED test_calculator.py::test_above - assert 12 == 10\r\n +  where 12 = clamp(12, 0, 10)\r\n3 failed in 0.04s\r\n",
+          "error": null,
+          "exit_code": 1,
+          "truncated": false,
+          "duration_ms": 312.9999999946449,
+          "requires_approval": false
+        },
+        "usage": null,
+        "duration_ms": 312.9999999946449
+      },
+      {
+        "sequence": 6,
+        "task_id": "c3e17f56-5f3c-46dc-bc63-3041caadbaf7",
+        "timestamp": "2026-09-10T11:18:17.078843+00:00",
+        "state": "EXECUTE",
+        "kind": "action",
+        "summary": "Patch clamp to bound value between low and high; the current nested max returns high for all cases.",
+        "tool": null,
+        "transport": null,
+        "input": {
+          "provider": {
+            "requested_model": "deepseek-flash",
+            "resolved_model": "deepseek-flash",
+            "request_id": "5570fc16-41ad-4058-82a0-feb17a213611",
+            "flavor": "deepseek"
+          }
+        },
+        "result": null,
+        "usage": {
+          "input_tokens": 3021,
+          "output_tokens": 107,
+          "cost_usd": null
+        },
+        "duration_ms": 0.0
+      },
+      {
+        "sequence": 7,
+        "task_id": "c3e17f56-5f3c-46dc-bc63-3041caadbaf7",
+        "timestamp": "2026-09-10T11:18:17.094383+00:00",
+        "state": "EXECUTE",
+        "kind": "tool",
+        "summary": "Patch clamp to bound value between low and high; the current nested max returns high for all cases.",
+        "tool": "apply_patch",
+        "transport": "native",
+        "input": {
+          "path": "calculator.py",
+          "old": "def clamp(value, low, high):\n    return max(low, max(high, value))",
+          "new": "def clamp(value, low, high):\n    return min(high, max(low, value))"
+        },
+        "result": {
+          "ok": true,
+          "output": "--- a/calculator.py\n+++ b/calculator.py\n@@ -1,3 +1,3 @@\n \"\"\"Deliberately broken fixture used only for deterministic harness validation.\"\"\"\n def clamp(value, low, high):\n-    return max(low, max(high, value))\n+    return min(high, max(low, value))\n",
+          "error": null,
+          "exit_code": null,
+          "truncated": false,
+          "duration_ms": 0.0,
+          "requires_approval": false
+        },
+        "usage": null,
+        "duration_ms": 0.0
+      },
+      {
+        "sequence": 8,
+        "task_id": "c3e17f56-5f3c-46dc-bc63-3041caadbaf7",
+        "timestamp": "2026-09-10T11:18:18.270429+00:00",
+        "state": "EXECUTE",
+        "kind": "action",
+        "summary": "Patch is applied and tests previously failed; rerun the authored clamp tests to confirm the fix.",
+        "tool": null,
+        "transport": null,
+        "input": {
+          "provider": {
+            "requested_model": "deepseek-flash",
+            "resolved_model": "deepseek-flash",
+            "request_id": "0a824a56-a1ee-426d-892c-3051a3a41c47",
+            "flavor": "deepseek"
+          }
+        },
+        "result": null,
+        "usage": {
+          "input_tokens": 3368,
+          "output_tokens": 62,
+          "cost_usd": null
+        },
+        "duration_ms": 0.0
+      },
+      {
+        "sequence": 9,
+        "task_id": "c3e17f56-5f3c-46dc-bc63-3041caadbaf7",
+        "timestamp": "2026-09-10T11:18:18.533628+00:00",
+        "state": "EXECUTE",
+        "kind": "tool",
+        "summary": "Patch is applied and tests previously failed; rerun the authored clamp tests to confirm the fix.",
+        "tool": "run_tests",
+        "transport": "native",
+        "input": {
+          "command": [
+            "python",
+            "-m",
+            "pytest",
+            "-q"
+          ]
+        },
+        "result": {
+          "ok": true,
+          "output": "...                                                                      [100%]\r\n3 passed in 0.01s\r\n",
+          "error": null,
+          "exit_code": 0,
+          "truncated": false,
+          "duration_ms": 250.0,
+          "requires_approval": false
+        },
+        "usage": null,
+        "duration_ms": 250.0
+      },
+      {
+        "sequence": 10,
+        "task_id": "c3e17f56-5f3c-46dc-bc63-3041caadbaf7",
+        "timestamp": "2026-09-10T11:18:19.544667+00:00",
+        "state": "EXECUTE",
+        "kind": "action",
+        "summary": "The clamp bug was already reproduced (3 failing tests) and repaired: calculator.py now returns min(high, max(low, value)), and all 3 tests pass. No unrelated files were added.",
+        "tool": null,
+        "transport": null,
+        "input": {
+          "provider": {
+            "requested_model": "deepseek-flash",
+            "resolved_model": "deepseek-flash",
+            "request_id": "614197f0-31cc-4794-8ad8-43ba1e307209",
+            "flavor": "deepseek"
+          }
+        },
+        "result": null,
+        "usage": {
+          "input_tokens": 3051,
+          "output_tokens": 66,
+          "cost_usd": null
+        },
+        "duration_ms": 0.0
+      },
+      {
+        "sequence": 11,
+        "task_id": "c3e17f56-5f3c-46dc-bc63-3041caadbaf7",
+        "timestamp": "2026-09-10T11:18:19.558147+00:00",
+        "state": "VERIFY",
+        "kind": "state",
+        "summary": "Run executable acceptance checks and inspect actual changes",
+        "tool": null,
+        "transport": null,
+        "input": null,
+        "result": null,
+        "usage": null,
+        "duration_ms": 0.0
+      },
+      {
+        "sequence": 12,
+        "task_id": "c3e17f56-5f3c-46dc-bc63-3041caadbaf7",
+        "timestamp": "2026-09-10T11:18:19.874530+00:00",
+        "state": "VERIFY",
+        "kind": "verification",
+        "summary": "{\"passed\": true, \"checks\": [{\"name\": \"authored-clamp-tests\", \"layer\": \"unit\", \"ok\": true, \"output\": \"...                                                                      [100%]\\r\\n3 passed in 0.01s\\r\\n\", \"error\": null, \"exit_code\": 0, \"truncated\": false, \"duration_ms\": 250.0, \"requires_approval\": false}, {\"name\": \"diff-review\", \"layer\": \"repository\", \"ok\": true, \"output\": \"diff --git a/calculator.py b/calculator.py\\nindex dcbecd4..7cbdd48 100644\\n--- a/calculator.py\\n+++ b/calculator.py\\n@@ -1,3 +1,3 @@\\n \\\"\\\"\\\"Deliberately broken fixture used only for deterministic harness validation.\\\"\\\"\\\"\\r\\n def clamp(value, low, high):\\r\\n-    return max(low, max(high, value))\\r\\n+    return min(high, max(low, value))\\r\\n\", \"truncated\": false}, {\"name\": \"changed:calculator.py\", \"layer\": \"acceptance\", \"ok\": true}, {\"name\": \"skill:unit\", \"layer\": \"acceptance\", \"ok\": true}], \"changed_files\": [\"calculator.py\"], \"evidence_source\": \"process-exit-codes-and-file-contracts\", \"model_judge\": false}",
+        "tool": null,
+        "transport": null,
+        "input": null,
+        "result": null,
+        "usage": null,
+        "duration_ms": 0.0
+      },
+      {
+        "sequence": 13,
+        "task_id": "c3e17f56-5f3c-46dc-bc63-3041caadbaf7",
+        "timestamp": "2026-09-10T11:18:19.884607+00:00",
+        "state": "FINISH",
+        "kind": "state",
+        "summary": "Acceptance evidence passed",
+        "tool": null,
+        "transport": null,
+        "input": null,
+        "result": null,
+        "usage": null,
+        "duration_ms": 0.0
+      }
+    ],
+    "context": {
+      "strategy": "structured",
+      "token_estimator": "utf8-bytes/3 + metadata",
+      "budget": 1800,
+      "context_tokens": 1662,
+      "retrieved_files": [
+        "README.md",
+        "calculator.py",
+        "test_calculator.py"
+      ],
+      "retrieved_chunks": [
+        {
+          "source": "previous-tool-result",
+          "path": "<observation>",
+          "start_line": 1,
+          "content": "{\"tool\": \"run_tests\", \"result\": {\"ok\": false, \"output\": \"FFF                                                                      [100%]\\r\\n================================== FAILURES ===================================\\r\\n_________________________________ test_inside _________________________________\\r\\n\\r\\n    def test_inside():\\r\\n>       assert clamp(5, 0, 10) == 5\\r\\nE       assert 10 == 5\\r\\nE        +  where 10 = clamp(5, 0, 10)\\r\\n\\r\\ntest_calculator.py:4: AssertionError\\r\\n_________________________________ test_below __________________________________\\r\\n\\r\\n    def test_below():\\r\\n>       assert clamp(-3, 0, 10) == 0\\r\\nE       assert 10 == 0\\r\\nE        +  where 10 = clamp(-3, 0, 10)\\r\\n\\r\\ntest_calculator.py:7: AssertionError\\r\\n_________________________________ test_above __________________________________\\r\\n\\r\\n    def test_above():\\r\\n>       assert clamp(12, 0, 10) == 10\\r\\nE       assert 12 == 10\\r\\nE        +  where 12 = clamp(12, 0, 10)\\r\\n\\r\\ntest_calculator.py:10: AssertionError\\r\\n=========================== short test summary info ===========================\\r\\nFAILED test_calculator.py::test_inside - assert 10 == 5\\r\\n +  where 10 = clamp(5, 0, 10)\\r\\nFAILED test_calculator.py::test_below - assert 10 == 0\\r\\n +  where 10 = clamp(-3, 0, 10)\\r\\nFAILED test_calculator.py::test_above - assert 12 == 10\\r\\n +  where 12 = clamp(12, 0, 10)\\r\\n3 failed in 0.04s\\r\\n\", \"error\": null, \"exit_code\": 1, \"truncated\": false, \"duration_ms\": 312.9999999946449, \"requires_approval\": false}}",
+          "score": 30.0,
+          "tokens": 537
+        },
+        {
+          "source": "previous-tool-result",
+          "path": "<observation>",
+          "start_line": 1,
+          "content": "{\"tool\": \"apply_patch\", \"result\": {\"ok\": true, \"output\": \"--- a/calculator.py\\n+++ b/calculator.py\\n@@ -1,3 +1,3 @@\\n \\\"\\\"\\\"Deliberately broken fixture used only for deterministic harness validation.\\\"\\\"\\\"\\n def clamp(value, low, high):\\n-    return max(low, max(high, value))\\n+    return min(high, max(low, value))\\n\", \"error\": null, \"exit_code\": null, \"truncated\": false, \"duration_ms\": 0.0, \"requires_approval\": false}}",
+          "score": 30.0,
+          "tokens": 171
+        },
+        {
+          "source": "previous-tool-result",
+          "path": "<observation>",
+          "start_line": 1,
+          "content": "{\"tool\": \"run_tests\", \"result\": {\"ok\": true, \"output\": \"...                                                                      [100%]\\r\\n3 passed in 0.01s\\r\\n\", \"error\": null, \"exit_code\": 0, \"truncated\": false, \"duration_ms\": 250.0, \"requires_approval\": false}}",
+          "score": 30.0,
+          "tokens": 118
+        },
+        {
+          "source": "failing-test-output",
+          "path": "<observation>",
+          "start_line": 1,
+          "content": "{\"tool\": \"run_tests\", \"result\": {\"ok\": false, \"output\": \"FFF                                                                      [100%]\\r\\n================================== FAILURES ===================================\\r\\n_________________________________ test_inside _________________________________\\r\\n\\r\\n    def test_inside():\\r\\n>       assert clamp(5, 0, 10) == 5\\r\\nE       assert 10 == 5\\r\\nE        +  where 10 = clamp(5, 0, 10)\\r\\n\\r\\ntest_calculator.py:4: AssertionError\\r\\n_________________________________ test_below __________________________________\\r\\n\\r\\n    def test_below():\\r\\n>       assert clamp(-3, 0, 10) == 0\\r\\nE       assert 10 == 0\\r\\nE        +  where 10 = clamp(-3, 0, 10)\\r\\n\\r\\ntest_calculator.py:7: AssertionError\\r\\n_________________________________ test_above __________________________________\\r\\n\\r\\n    def test_above():\\r\\n>       assert clamp(12, 0, 10) == 10\\r\\nE       assert 12 == 10\\r\\nE        +  where 12 = clamp(12, 0, 10)\\r\\n\\r\\ntest_calculator.py:10: AssertionError\\r\\n=========================== short test summary info ===========================\\r\\nFAILED test_calculator.py::test_inside - assert 10 == 5\\r\\n +  where 10 = clamp(5, 0, 10)\\r\\nFAILED test_calculator.py::test_below - assert 10 == 0\\r\\n +  where 10 = clamp(-3, 0, 10)\\r\\nFAILED test_calculator.py::test_above - assert 12 == 10\\r\\n +  where 12 = clamp(12, 0, 10)\\r\\n3 failed in 0.04s\\r\\n\", \"error\": null, \"exit_code\": 1, \"truncated\": false, \"duration_ms\": 312.9999999946449, \"requires_approval\": false}}",
+          "score": 30.0,
+          "tokens": 537
+        },
+        {
+          "source": "symbol-search",
+          "path": "calculator.py",
+          "start_line": 1,
+          "content": "\"\"\"Deliberately broken fixture used only for deterministic harness validation.\"\"\"\ndef clamp(value, low, high):\n    return min(high, max(low, value))",
+          "score": 8.9169,
+          "tokens": 80
+        },
+        {
+          "source": "docs",
+          "path": "README.md",
+          "start_line": 1,
+          "content": "# RepoPilot deterministic demonstration fixture\nA clamp bug, three real pytest checks, and one exact scripted repair. This is not a language-model benchmark.",
+          "score": 8.7756,
+          "tokens": 83
+        },
+        {
+          "source": "symbol-search",
+          "path": "test_calculator.py",
+          "start_line": 1,
+          "content": "from calculator import clamp\n\ndef test_inside():\n    assert clamp(5, 0, 10) == 5\n\ndef test_below():\n    assert clamp(-3, 0, 10) == 0\n\ndef test_above():\n    assert clamp(12, 0, 10) == 10",
+          "score": 3.9996,
+          "tokens": 92
+        },
+        {
+          "source": "repository-tree",
+          "path": "<tree>",
+          "start_line": 1,
+          "content": "README.md\ncalculator.py\ntest_calculator.py",
+          "score": 2.0,
+          "tokens": 44
+        }
+      ],
+      "discarded_context": []
+    },
+    "working_memory": {
+      "plan": [],
+      "observations": [
+        "{\"tool\": \"run_tests\", \"result\": {\"ok\": false, \"output\": \"FFF                                                                      [100%]\\r\\n================================== FAILURES ===================================\\r\\n_________________________________ test_inside _________________________________\\r\\n\\r\\n    def test_inside():\\r\\n>       assert clamp(5, 0, 10) == 5\\r\\nE       assert 10 == 5\\r\\nE        +  where 10 = clamp(5, 0, 10)\\r\\n\\r\\ntest_calculator.py:4: AssertionError\\r\\n_________________________________ test_below __________________________________\\r\\n\\r\\n    def test_below():\\r\\n>       assert clamp(-3, 0, 10) == 0\\r\\nE       assert 10 == 0\\r\\nE        +  where 10 = clamp(-3, 0, 10)\\r\\n\\r\\ntest_calculator.py:7: AssertionError\\r\\n_________________________________ test_above __________________________________\\r\\n\\r\\n    def test_above():\\r\\n>       assert clamp(12, 0, 10) == 10\\r\\nE       assert 12 == 10\\r\\nE        +  where 12 = clamp(12, 0, 10)\\r\\n\\r\\ntest_calculator.py:10: AssertionError\\r\\n=========================== short test summary info ===========================\\r\\nFAILED test_calculator.py::test_inside - assert 10 == 5\\r\\n +  where 10 = clamp(5, 0, 10)\\r\\nFAILED test_calculator.py::test_below - assert 10 == 0\\r\\n +  where 10 = clamp(-3, 0, 10)\\r\\nFAILED test_calculator.py::test_above - assert 12 == 10\\r\\n +  where 12 = clamp(12, 0, 10)\\r\\n3 failed in 0.04s\\r\\n\", \"error\": null, \"exit_code\": 1, \"truncated\": false, \"duration_ms\": 312.9999999946449, \"requires_approval\": false}}",
+        "{\"tool\": \"apply_patch\", \"result\": {\"ok\": true, \"output\": \"--- a/calculator.py\\n+++ b/calculator.py\\n@@ -1,3 +1,3 @@\\n \\\"\\\"\\\"Deliberately broken fixture used only for deterministic harness validation.\\\"\\\"\\\"\\n def clamp(value, low, high):\\n-    return max(low, max(high, value))\\n+    return min(high, max(low, value))\\n\", \"error\": null, \"exit_code\": null, \"truncated\": false, \"duration_ms\": 0.0, \"requires_approval\": false}}",
+        "{\"tool\": \"run_tests\", \"result\": {\"ok\": true, \"output\": \"...                                                                      [100%]\\r\\n3 passed in 0.01s\\r\\n\", \"error\": null, \"exit_code\": 0, \"truncated\": false, \"duration_ms\": 250.0, \"requires_approval\": false}}"
+      ],
+      "failures": [
+        "{\"tool\": \"run_tests\", \"result\": {\"ok\": false, \"output\": \"FFF                                                                      [100%]\\r\\n================================== FAILURES ===================================\\r\\n_________________________________ test_inside _________________________________\\r\\n\\r\\n    def test_inside():\\r\\n>       assert clamp(5, 0, 10) == 5\\r\\nE       assert 10 == 5\\r\\nE        +  where 10 = clamp(5, 0, 10)\\r\\n\\r\\ntest_calculator.py:4: AssertionError\\r\\n_________________________________ test_below __________________________________\\r\\n\\r\\n    def test_below():\\r\\n>       assert clamp(-3, 0, 10) == 0\\r\\nE       assert 10 == 0\\r\\nE        +  where 10 = clamp(-3, 0, 10)\\r\\n\\r\\ntest_calculator.py:7: AssertionError\\r\\n_________________________________ test_above __________________________________\\r\\n\\r\\n    def test_above():\\r\\n>       assert clamp(12, 0, 10) == 10\\r\\nE       assert 12 == 10\\r\\nE        +  where 12 = clamp(12, 0, 10)\\r\\n\\r\\ntest_calculator.py:10: AssertionError\\r\\n=========================== short test summary info ===========================\\r\\nFAILED test_calculator.py::test_inside - assert 10 == 5\\r\\n +  where 10 = clamp(5, 0, 10)\\r\\nFAILED test_calculator.py::test_below - assert 10 == 0\\r\\n +  where 10 = clamp(-3, 0, 10)\\r\\nFAILED test_calculator.py::test_above - assert 12 == 10\\r\\n +  where 12 = clamp(12, 0, 10)\\r\\n3 failed in 0.04s\\r\\n\", \"error\": null, \"exit_code\": 1, \"truncated\": false, \"duration_ms\": 312.9999999946449, \"requires_approval\": false}}"
+      ]
+    },
+    "final_diff": "diff --git a/calculator.py b/calculator.py\nindex dcbecd4..7cbdd48 100644\n--- a/calculator.py\n+++ b/calculator.py\n@@ -1,3 +1,3 @@\n \"\"\"Deliberately broken fixture used only for deterministic harness validation.\"\"\"\r\n def clamp(value, low, high):\r\n-    return max(low, max(high, value))\r\n+    return min(high, max(low, value))\r\n",
+    "test_result": {
+      "passed": true,
+      "checks": [
+        {
+          "name": "authored-clamp-tests",
+          "layer": "unit",
+          "ok": true,
+          "output": "...                                                                      [100%]\r\n3 passed in 0.01s\r\n",
+          "error": null,
+          "exit_code": 0,
+          "truncated": false,
+          "duration_ms": 250.0,
+          "requires_approval": false
+        },
+        {
+          "name": "diff-review",
+          "layer": "repository",
+          "ok": true,
+          "output": "diff --git a/calculator.py b/calculator.py\nindex dcbecd4..7cbdd48 100644\n--- a/calculator.py\n+++ b/calculator.py\n@@ -1,3 +1,3 @@\n \"\"\"Deliberately broken fixture used only for deterministic harness validation.\"\"\"\r\n def clamp(value, low, high):\r\n-    return max(low, max(high, value))\r\n+    return min(high, max(low, value))\r\n",
+          "truncated": false
+        },
+        {
+          "name": "changed:calculator.py",
+          "layer": "acceptance",
+          "ok": true
+        },
+        {
+          "name": "skill:unit",
+          "layer": "acceptance",
+          "ok": true
+        }
+      ],
+      "changed_files": [
+        "calculator.py"
+      ],
+      "evidence_source": "process-exit-codes-and-file-contracts",
+      "model_judge": false
+    },
+    "usage": {
+      "input_tokens": 10277,
+      "output_tokens": 323,
+      "cost_usd": null
+    },
+    "error": null,
+    "evidence_label": "real-provider-run",
+    "latency_ms": 5437.000000005355
+  },
+  "publication_redaction": {
+    "original_receipt_sha256": "48995b39b99366b99b6e997427e6a6aeaa703a483f2d62c5fc226f1715357ffb",
+    "replacements": [
+      "specific authored-fixture path",
+      "specific isolated-workspace path",
+      "specific run-root path",
+      "RepoPilot checkout path"
+    ],
+    "preserved": [
+      "source hashes",
+      "task and fixture commits",
+      "commands",
+      "process exit codes",
+      "diff",
+      "trace actions",
+      "provider metadata",
+      "usage",
+      "latency",
+      "failure reproduction"
+    ]
+  }
+}

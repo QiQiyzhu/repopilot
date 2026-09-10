@@ -93,9 +93,11 @@ REST 面向应用请求，function calling 定义模型可选择的 action，MCP
 
 ## G. LLMOps 设计
 
-Provider protocol 解耦 Fake / Replay / OpenAI compatible HTTP 调用。真实请求读取环境变量 key/model，验证结构化 action，保存真实 usage；没有密钥时明确失败。cost 只在配置价格时计算，未知为 null。Fake 明确是固定 clamp fixture 驱动器，无模型推理；Replay 使用本地录制 action。
+Provider protocol 解耦 Fake / Replay / OpenAI compatible HTTP 调用。当前真实接入使用 DeepSeek flavor：服务端环境变量 key/model，显式官方端点、JSON Action、本地 schema 校验、thinking disabled 与 max_tokens。首次实际 nonce probe 为 1 次响应、107 input / 47 output tokens、1047 ms，见 [原始记录](evidence/deepseek-smoke.json)。它只验证连接和响应契约，没有测量解题率。没有密钥、截断、拒答或缺少 usage 都明确失败；401 不重试，429 只在任务预算内重试，单次 probe 不重试；读超时因计费结果未知也不重试。cost 只在配置价格时计算，未知为 null。Fake 是固定 fixture 驱动器；Replay 使用本地录制 action。
 
 项目具备 trace、可配置 benchmark、版本固定的任务和可切换 harness profile，但没有完整 prompt registry、在线 A/B 发布、模型训练或生产 drift monitoring。CI 不调用付费 API。真实 provider benchmark 提供显式 opt-in CLI，尚未执行。
+
+另外执行了一次真实 DeepSeek authored clamp 小任务：[完整脱敏 trace](evidence/deepseek-task.json)。四次模型调用自主复现失败、修改、复测、finish；独立 verifier 再次执行 3 项 pytest，并确认测试未改、只有 calculator.py 改动。实测 10,277 input / 323 output tokens、5.437 秒。它证明单个可信 fixture 的模型到执行再到验收链路可运行，不是 36 任务 benchmark，也不构成消融收益。具体配置与次数边界见 [real-model-setup.md](real-model-setup.md)。
 
 ## H. Reliability 机制
 
@@ -113,11 +115,12 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 
 | Executed check | Actual result | Scope / evidence |
 |---|---|---|
-| Python backend full suite | 57 passed, 1 skipped | Windows 缺少 symlink 创建权限而 skip；docs/evidence/validation.json |
+| Python backend full suite | 93 passed, 1 skipped | Windows 缺少 symlink 创建权限而 skip；[当前实际记录](evidence/deepseek-validation.json) |
+| Actual DeepSeek authored task | 1 accepted / 4 model calls | 3 pytest pass，独立复验；输入 10,277 / 输出 323 tokens；单个可见测试 fixture |
 | Final API/MCP/archive targeted checks | 5 passed | 配置模块改动之后；后续 API annotation 检查 3 passed |
 | Frontend unit | 4 passed | API 边界、错误、真实空值等 |
 | Playwright real-backend | 6 passed | MCP demo、持久化、retry、approval approve/reject/cancel、失败、memory、mobile |
-| Ruff / mypy | passed / 19 source files | backend/repopilot 与 scripts lint |
+| Ruff / mypy | passed / 22 source files | backend/repopilot 与 scripts lint |
 | Typecheck / lint / build | passed | frontend |
 | npm audit | 0 vulnerabilities | 验证时实际结果，不代表永久安全 |
 | Pinned ARC regression | 92 tests + typecheck + build passed | 只读源提交的独立 archive |
@@ -225,7 +228,7 @@ SQLite 事件序号支撑 SSE Last-Event-ID 恢复，断开浏览器只结束传
 
 ## T. 5 条基于真实结果的简历 Bullet 候选
 
-- 基于 Python 3.12、FastAPI、React 和 SQLite 构建代码任务 Agent harness，实现七态执行、限次修复、取消/超时及可重连 SSE trace；后端实际验证 57 项通过、1 项因 Windows 权限跳过。
+- 基于 Python 3.12、FastAPI、React 和 SQLite 构建代码任务 Agent harness，实现七态执行、限次修复、取消/超时及可重连 SSE trace；后端实际验证 93 项通过、1 项因 Windows 权限跳过，覆盖 DeepSeek payload、计费未知、失败分类和调用次数边界。
 - 实现 native tools 与真实 MCP stdio server/client，结合独立 Git snapshot、命令 allowlist、路径守卫、人工删除审批和实际 verifier；明确区分应用权限边界与 OS sandbox。
 - 围绕 ARC//SHIFT 固定提交设计 36 项独立 acceptance 合同，全部通过负例失败/参考修改成功验证，其中 6 项补测试任务拒绝指定 mutant；基线 92 项回归测试、类型检查和构建通过。
 - 实现带 provenance 和预算的代码上下文选择、严格版本隔离 memory 及五组 harness 配置，执行已知 fixture 对照并公开真实 LLM benchmark 未运行的边界。

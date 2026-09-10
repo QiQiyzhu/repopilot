@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import json
+import math
 import os
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 import httpx
 
@@ -11,7 +14,102 @@ from .models import Action, ModelReply, Usage
 
 
 class ProviderError(RuntimeError):
-    pass
+    def __init__(self, message: str, *, retryable: bool = False):
+        super().__init__(message)
+        self.retryable = retryable
+
+
+@dataclass(frozen=True)
+class RemoteConfig:
+    key: str = field(repr=False)
+    model: str
+    base_url: str
+    flavor: str
+    timeout_seconds: float
+    input_rate: float | None
+    output_rate: float | None
+
+    @classmethod
+    def from_environment(cls) -> RemoteConfig:
+        flavor = os.environ.get("REPOPILOT_PROVIDER_FLAVOR", "openai").strip()
+        if flavor not in {"openai", "deepseek", "qwen", "compatible"}:
+            raise ProviderError("REPOPILOT_PROVIDER_FLAVOR must be openai, deepseek, qwen or compatible")
+        key = os.environ.get("OPENAI_API_KEY", "").strip()
+        model = os.environ.get("OPENAI_MODEL", "").strip()
+        base = os.environ.get("OPENAI_BASE_URL", "").strip().rstrip("/")
+        if flavor == "deepseek":
+            key = os.environ.get("DEEPSEEK_API_KEY", "").strip() or key
+            model = os.environ.get("DEEPSEEK_MODEL", "").strip() or model
+            base = os.environ.get("DEEPSEEK_BASE_URL", "").strip().rstrip("/") or base
+            if not base:
+                base = "https://api.deepseek.com"
+        if not base and flavor == "openai":
+            base = "https://api.openai.com/v1"
+        if not key or not model:
+            raise ProviderError(
+                "Set a server API key and explicit model: DEEPSEEK_API_KEY / DEEPSEEK_MODEL for deepseek, or OPENAI_API_KEY / OPENAI_MODEL"
+            )
+        try:
+            url = urlsplit(base)
+            explicit_loopback = (
+                url.scheme == "http"
+                and url.hostname in {"127.0.0.1", "::1", "localhost"}
+                and url.port is not None
+            )
+            if (
+                not url.hostname
+                or not (url.scheme == "https" or explicit_loopback)
+                or url.username is not None
+                or url.password is not None
+                or url.query
+                or url.fragment
+                or any(char in base for char in "{}\\\r\n\t ")
+            ):
+                raise ValueError
+        except ValueError:
+            raise ProviderError(
+                "OPENAI_BASE_URL must be a complete HTTPS base URL (or explicit loopback port), without credentials, query or placeholders"
+            ) from None
+        if flavor == "deepseek" and base not in {
+            "https://api.deepseek.com", "https://api.deepseek.com/v1"
+        }:
+            raise ProviderError("DeepSeek flavor requires the official HTTPS API base URL")
+        if len(model) > 200 or any(char.isspace() for char in model) or key in model:
+            raise ProviderError("Provider model must be a non-secret identifier of at most 200 characters")
+        try:
+            timeout = float(os.environ.get("REPOPILOT_PROVIDER_TIMEOUT_SECONDS", "45"))
+            if not math.isfinite(timeout) or not 0 < timeout <= 120:
+                raise ValueError
+            rates = [
+                os.environ.get(f"REPOPILOT_{side}_USD_PER_MILLION", "")
+                for side in ["INPUT", "OUTPUT"]
+            ]
+            if bool(rates[0]) != bool(rates[1]):
+                raise ValueError
+            parsed = [float(rate) if rate else None for rate in rates]
+            if any(rate is not None and (not math.isfinite(rate) or rate < 0) for rate in parsed):
+                raise ValueError
+        except ValueError:
+            raise ProviderError(
+                "Provider timeout must be finite in (0, 120]; both optional USD rates must be finite and nonnegative"
+            ) from None
+        return cls(key, model, base, flavor, timeout, parsed[0], parsed[1])
+
+    def public_status(self) -> dict[str, Any]:
+        return {
+            "configured": True,
+            "credentials_present": True,
+            "flavor": self.flavor,
+            "model": self.model,
+            "base_url": self.base_url,
+            "timeout_seconds": self.timeout_seconds,
+            "output_token_parameter": "max_completion_tokens"
+            if self.flavor == "openai"
+            else "max_tokens",
+            "thinking": "disabled" if self.flavor in {"qwen", "deepseek"} else "provider-default",
+            "cost_rates_configured": self.input_rate is not None,
+            "network_checked": False,
+        }
 
 
 class FakeModelProvider:
@@ -99,61 +197,90 @@ class OpenAIProvider:
     name = "openai"
 
     def __init__(self, *, client: httpx.AsyncClient | None = None):
-        self.key = os.environ.get("OPENAI_API_KEY", "")
-        self.model = os.environ.get("OPENAI_MODEL", "")
-        self.base_url = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
+        self.config = RemoteConfig.from_environment()
+        self.key, self.model, self.base_url = (
+            self.config.key,
+            self.config.model,
+            self.config.base_url,
+        )
         self.client = client
-        if not self.key or not self.model:
-            raise ProviderError(
-                "OPENAI_API_KEY and OPENAI_MODEL must be set for an explicitly requested real-provider run"
-            )
-        if not self.base_url.startswith("https://") and not self.base_url.startswith(
-            "http://127.0.0.1:"
-        ):
-            raise ProviderError("Provider endpoint must use HTTPS or explicit localhost")
 
     async def complete(self, messages: list[dict[str, Any]], max_tokens: int) -> ModelReply:
-        payload = {
+        if type(max_tokens) is not int or max_tokens <= 0:
+            raise ProviderError("provider_invalid_output_budget")
+        token_parameter = (
+            "max_completion_tokens" if self.config.flavor == "openai" else "max_tokens"
+        )
+        payload: dict[str, Any] = {
             "model": self.model,
             "messages": messages,
-            "max_completion_tokens": min(max_tokens, 4000),
+            token_parameter: min(max_tokens, 4000),
             "response_format": {"type": "json_object"},
         }
+        if self.config.flavor == "qwen":
+            payload["enable_thinking"] = False
+        elif self.config.flavor == "deepseek":
+            payload["thinking"] = {"type": "disabled"}
         own_client = self.client is None
-        client = self.client or httpx.AsyncClient(timeout=45)
+        client = self.client or httpx.AsyncClient(
+            timeout=self.config.timeout_seconds, follow_redirects=False
+        )
         try:
             response = await client.post(
                 self.base_url + "/chat/completions",
                 headers={"Authorization": "Bearer " + self.key},
                 json=payload,
+                follow_redirects=False,
             )
-            if response.status_code >= 400:
-                raise ProviderError(f"provider_http_{response.status_code}")
+            if response.status_code != 200:
+                raise ProviderError(
+                    f"provider_http_{response.status_code}",
+                    retryable=response.status_code in {408, 429, 500, 502, 503, 504},
+                )
             body = response.json()
             choice = body["choices"][0]
             if choice.get("finish_reason") == "length":
                 raise ProviderError("provider_output_truncated")
+            if choice.get("finish_reason") != "stop" or choice["message"].get("refusal"):
+                raise ProviderError("provider_output_not_complete")
             action = Action.model_validate_json(choice["message"]["content"])
-            usage = body.get("usage", {})
+            usage = body["usage"]
             input_tokens, output_tokens = (
-                usage.get("prompt_tokens", 0),
-                usage.get("completion_tokens", 0),
+                usage["prompt_tokens"],
+                usage["completion_tokens"],
             )
-            rates = (
-                os.environ.get("REPOPILOT_INPUT_USD_PER_MILLION"),
-                os.environ.get("REPOPILOT_OUTPUT_USD_PER_MILLION"),
-            )
+            if any(type(value) is not int or value < 0 for value in (input_tokens, output_tokens)):
+                raise ProviderError("provider_invalid_usage")
+            rates = self.config.input_rate, self.config.output_rate
             cost = (
-                (input_tokens * float(rates[0]) + output_tokens * float(rates[1])) / 1_000_000
-                if rates[0] and rates[1]
+                (input_tokens * rates[0] + output_tokens * rates[1]) / 1_000_000
+                if rates[0] is not None and rates[1] is not None
                 else None
             )
+            metadata = {
+                "requested_model": self.model,
+                "resolved_model": body.get("model"),
+                "request_id": response.headers.get("x-request-id") or body.get("id"),
+                "flavor": self.config.flavor,
+            }
+            # Only bounded scalar provenance; never raw response/error bodies or reasoning content.
+            safe_metadata = {
+                k: v
+                for k, v in metadata.items()
+                if isinstance(v, str) and len(v) <= 200 and self.key not in v
+            }
             return ModelReply(
                 action=action,
                 usage=Usage(input_tokens=input_tokens, output_tokens=output_tokens, cost_usd=cost),
+                provider_metadata=safe_metadata,
             )
-        except (httpx.HTTPError, KeyError, ValueError, TypeError) as error:
-            raise ProviderError(f"Invalid provider response: {type(error).__name__}") from error
+        except httpx.TimeoutException:
+            # A read timeout may have consumed tokens. Do not auto-repeat a billable request.
+            raise ProviderError("provider_timeout_outcome_unknown") from None
+        except httpx.ConnectError:
+            raise ProviderError("provider_connection_failed", retryable=True) from None
+        except (httpx.HTTPError, KeyError, IndexError, ValueError, TypeError) as error:
+            raise ProviderError(f"Invalid provider response: {type(error).__name__}") from None
         finally:
             if own_client:
                 await client.aclose()

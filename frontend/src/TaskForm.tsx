@@ -170,9 +170,9 @@ export function TaskForm({
         )}
         {provider === "openai" && !health?.real_provider_configured && (
           <p className="inline-warning">
-            A real provider is not configured. Set OPENAI_API_KEY and
-            OPENAI_MODEL in the backend environment; a request will fail
-            explicitly until then.
+            A real provider is not configured. Set DEEPSEEK_API_KEY,
+            DEEPSEEK_MODEL and REPOPILOT_PROVIDER_FLAVOR=deepseek in the backend
+            environment, then start the server from that environment.
           </p>
         )}
         <details className="advanced">

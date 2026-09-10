@@ -70,6 +70,15 @@ def main() -> None:
     serve = sub.add_parser("serve")
     serve.add_argument("--host", default=os.environ.get("REPOPILOT_HOST", "127.0.0.1"))
     serve.add_argument("--port", type=int, default=int(os.environ.get("REPOPILOT_PORT", "8000")))
+    sub.add_parser(
+        "provider-check", help="Validate server environment without making a network request"
+    )
+    smoke_parser = sub.add_parser(
+        "provider-smoke", help="One opt-in remote JSON response; no repository execution"
+    )
+    smoke_parser.add_argument("--execute", "--confirm-paid-api", dest="confirm_paid_api", action="store_true")
+    smoke_parser.add_argument("--max-output-tokens", type=int, default=256)
+    smoke_parser.add_argument("--output")
     for name in ["demo", "run"]:
         p = sub.add_parser(name)
         p.add_argument("--data", default=".repopilot")
@@ -88,6 +97,18 @@ def main() -> None:
         import uvicorn
 
         uvicorn.run("repopilot.api:app", host=args.host, port=args.port)
+    elif args.command in {"provider-check", "provider-smoke"}:
+        from .provider_check import configuration_check, smoke, write_report
+
+        if args.command == "provider-check":
+            report = configuration_check()
+            write_report(report, None)
+            raise SystemExit(0 if report["configured"] else 1)
+        report = asyncio.run(
+            smoke(confirm_paid_api=args.confirm_paid_api, max_output_tokens=args.max_output_tokens)
+        )
+        write_report(report, args.output)
+        raise SystemExit(0 if report["status"] == "passed" else 1)
     else:
         asyncio.run(execute(args))
 

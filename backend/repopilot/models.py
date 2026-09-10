@@ -79,6 +79,7 @@ class Usage(BaseModel):
 class ModelReply(BaseModel):
     action: Action
     usage: Usage = Field(default_factory=Usage)
+    provider_metadata: dict[str, str] = Field(default_factory=dict)
 
 
 class ToolResult(BaseModel):

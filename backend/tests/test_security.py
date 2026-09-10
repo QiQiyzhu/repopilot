@@ -72,9 +72,11 @@ def test_tests_require_trust(tmp_path):
 def test_secrets_are_redacted_and_not_in_child_environment(monkeypatch):
     secret = "sk-abcdefghijklmnopqrstuvwxyz123456"
     monkeypatch.setenv("OPENAI_API_KEY", secret)
+    monkeypatch.setenv("DEEPSEEK_API_KEY", secret)
     assert secret not in redact("key=" + secret)
     assert "[REDACTED]" in redact("Bearer abcdefghijk")
     assert "OPENAI_API_KEY" not in child_environment()
+    assert "DEEPSEEK_API_KEY" not in child_environment()
 
 
 async def test_timeout_kills_process(tmp_path):

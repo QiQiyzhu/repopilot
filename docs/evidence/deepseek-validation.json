@@ -1,0 +1,30 @@
+{
+  "evidence_type": "actual-local-process-results",
+  "command": ".venv/Scripts/python.exe -m pytest -q --junitxml=outputs/deepseek-backend-junit.xml",
+  "backend": {
+    "total": 94,
+    "passed": 93,
+    "failed": 0,
+    "skipped": [
+      {
+        "name": "test_symlinks_rejected",
+        "reason": "Host disallows symlink creation without elevation"
+      }
+    ]
+  },
+  "junit_sha256": "240d91507059999fa585168568bfd48f71fd4e567ef98bdc0d162d6d8f6f16aa",
+  "python": "3.12.14",
+  "platform": "Windows",
+  "lint": "ruff check backend scripts: passed",
+  "typecheck": "mypy backend/repopilot: 22 source files passed",
+  "frontend": {
+    "unit_tests_passed": 4,
+    "typecheck": "passed",
+    "lint": "passed",
+    "production_build": "passed"
+  },
+  "source_commit_at_validation": "db80588a485c66b7b2a9322a6f76d6b87ac36e55",
+  "working_tree_dirty": true,
+  "remote_probe": "deepseek-smoke.json",
+  "model_36_task_benchmark": "not_run"
+}

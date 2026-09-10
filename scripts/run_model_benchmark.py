@@ -14,6 +14,7 @@ from uuid import uuid4
 from repopilot.evaluation import PROFILES, ROOT, acceptance, apply_reference, contract_rejected
 from repopilot.harness import Harness
 from repopilot.models import Acceptance, Budget, Check, TaskRequest
+from repopilot.providers import ProviderError, RemoteConfig
 from repopilot.security import run_process, validate_command
 from repopilot.workspace import GitWorkspace
 
@@ -32,14 +33,14 @@ def npm_command(arguments):
 
 
 async def main(args):
-    if (
-        not args.confirm_paid_api
-        or not os.environ.get("OPENAI_API_KEY")
-        or not os.environ.get("OPENAI_MODEL")
-    ):
+    if not args.confirm_paid_api:
         raise SystemExit(
-            "Set OPENAI_API_KEY / OPENAI_MODEL and explicitly pass --confirm-paid-api. No fallback provider will run."
+            "Explicitly pass --confirm-paid-api. No fallback provider will run."
         )
+    try:
+        remote_config = RemoteConfig.from_environment()
+    except ProviderError as error:
+        raise SystemExit(str(error)) from None
     manifest = json.loads((ROOT / "evaluation/tasks/arc-shift.json").read_text())
     selected = [t for t in manifest["tasks"] if not args.task_id or t["task_id"] in args.task_id]
     if not selected:
@@ -146,7 +147,8 @@ async def main(args):
                     "run_id": result.task_id,
                     "profile": profile["id"],
                     "provider": "openai",
-                    "model": os.environ["OPENAI_MODEL"],
+                    "model": remote_config.model,
+                    "provider_flavor": remote_config.flavor,
                     "passed": bool(
                         external
                         and external["passed"]

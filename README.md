@@ -44,7 +44,7 @@ flowchart TD
 
 | Experiment | Observed result | What it means |
 |---|---|---|
-| Backend checks | **59 pass, 1 Windows privilege skip** | Lifecycle, safety, context, provider, MCP, API and negative-control contracts; [latest local record](docs/evidence/decision-validation.json) |
+| Backend checks | **93 pass, 1 Windows privilege skip** | Lifecycle, safety, context, provider, MCP, API and negative-control contracts; [latest local record](docs/evidence/deepseek-validation.json) |
 | Frontend checks | **4 unit + 6 real-backend browser workflows pass** | UI and execution evidence agree |
 | Docker Compose runtime | **Startup + backend restart pass** | Actual task/verification/diff/SSE through Nginx on 8080; [raw evidence](docs/container-runtime.md) |
 | ARC task contracts | **36 / 36** positive/negative controls validated | Tasks have executable discriminating acceptance criteria |
@@ -52,7 +52,9 @@ flowchart TD
 | Green-tests counterexample | **Both 93-test runs green; one candidate rejected** | Independent candidate-only mutation distinguishes test adequacy from suite success; [raw case](evaluation/results/decision-case.json) |
 | Pinned ARC baseline | **92 tests**, typecheck and build pass | The archived evaluation baseline is viable |
 | Five harness configurations | **5 / 5** known-fixture repairs pass external pytest | Configuration plumbing works; this is not model performance |
-| Real-provider 36-task ablation | **Not run** | No paid API was invoked; success rates and token comparisons are unknown |
+| DeepSeek integration probe | **1 actual response passed** | 107 input / 47 output tokens, 1047 ms; [raw receipt](docs/evidence/deepseek-smoke.json), nonce/schema only |
+| DeepSeek authored fixture | **1 task accepted, 4 model calls** | Actual failure → model patch → 3 passing tests → independent recheck; 10,277 input / 323 output tokens, 5.437 s; [full trace](docs/evidence/deepseek-task.json) |
+| Real-provider 36-task ablation | **Not run** | Integration probes do not establish coding success rates or ablation improvement |
 
 [Machine-readable reports](evaluation/results/) contain actual process exit codes and measured timings. Reference patches validate the benchmark; they are never given to a provider. Tasks are clearly labelled **AI-assisted, authored exercises**, not invented historical defects or independently human-reviewed benchmarks.
 
@@ -117,7 +119,7 @@ python -m repopilot.evaluation ablate-fixture
 
 The benchmark always materializes commit **`b17f4c24cf95a02d3197ec493026b6f23c8f2c3e`**; it never mutates the user's checkout. To submit your own repository through the UI, set `REPOPILOT_REPO_ROOT` to its containing directory before starting the backend. The demo repository must also be inside that root. Uncommitted source changes are intentionally excluded.
 
-For opt-in real-provider work, set `OPENAI_API_KEY` and `OPENAI_MODEL` in the backend environment, select `openai`, and explicitly trust the repository code. Keys are never sent to the frontend. Missing configuration fails visibly; there is no silent fake fallback.
+For real-provider work, use the [DeepSeek setup and bounded probe](docs/real-model-setup.md): set `DEEPSEEK_API_KEY`, `DEEPSEEK_MODEL` and `REPOPILOT_PROVIDER_FLAVOR=deepseek` in the server environment. `provider-check` makes zero network calls; `provider-smoke --execute` makes at most one 256-output-token request and executes no tools. The existing run selector remains `openai` for compatibility, while the explicit flavor selects DeepSeek. Keys never enter the frontend. Missing credentials, truncated/refused output and invalid usage fail visibly, with no Fake fallback. A smoke receipt is not a coding benchmark.
 
 ```sh
 # This is a paid API operation: run only when you choose to authorize it.

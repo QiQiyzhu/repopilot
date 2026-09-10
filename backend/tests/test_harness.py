@@ -142,7 +142,7 @@ class FailThenSucceed:
     async def complete(self, messages, max_tokens):
         self.calls += 1
         if self.calls == 1:
-            raise ProviderError("transient outage")
+            raise ProviderError("transient outage", retryable=True)
         return await self.fake.complete(messages, max_tokens)
 
 
@@ -155,6 +155,22 @@ async def test_provider_retries_without_fake_fallback(harness, repo):
     result = harness.store.get_task(task.task_id)
     assert result.status == "succeeded" and provider.calls == 8
     assert any(e.kind == "provider-error" for e in result.trace)
+
+
+async def test_permanent_provider_failure_is_not_retried(harness, repo):
+    class RejectedProvider:
+        name = "rejected"
+        calls = 0
+
+        async def complete(self, messages, max_tokens):
+            self.calls += 1
+            raise ProviderError("provider_http_401")
+
+    provider = RejectedProvider()
+    task = await harness.submit(TaskRequest(repository=str(repo), task="Fix clamp"), provider)
+    await harness.jobs[task.task_id]
+    result = harness.store.get_task(task.task_id)
+    assert provider.calls == 1 and result.status == "failed" and result.step_count == 0
 
 
 async def test_missing_real_key_fails_explicitly(harness, repo, monkeypatch):

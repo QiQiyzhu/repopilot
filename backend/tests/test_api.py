@@ -59,3 +59,20 @@ def test_optional_api_auth(tmp_path, monkeypatch):
             client.get("/health", headers={"authorization": "Bearer local-test-token"}).status_code
             == 200
         )
+
+
+def test_health_checks_real_configuration_without_disclosing_it(tmp_path, monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "private-unit-key")
+    monkeypatch.setenv("OPENAI_MODEL", "qwen-plus")
+    monkeypatch.setenv("REPOPILOT_PROVIDER_FLAVOR", "qwen")
+    monkeypatch.setenv(
+        "OPENAI_BASE_URL", "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
+    )
+    with TestClient(create_app(tmp_path / "data", tmp_path)) as client:
+        response = client.get("/health")
+        assert response.json()["real_provider_configured"] is False
+        assert "private-unit-key" not in response.text
+        monkeypatch.setenv(
+            "OPENAI_BASE_URL", "https://workspace.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
+        )
+        assert client.get("/health").json()["real_provider_configured"] is True

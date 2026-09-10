@@ -17,6 +17,7 @@ from .config import PROJECT_ROOT
 from .demo import create_demo_repository
 from .harness import TERMINAL, Harness
 from .models import MemoryEntry, TaskRecord, TaskRequest
+from .provider_check import configuration_check
 from .skills import SkillDefinition
 
 
@@ -86,9 +87,7 @@ def create_app(data: Path | None = None, repository_root: Path | None = None) ->
             "version": "0.1.0",
             "demo_repository": getattr(app.state, "demo_repository", None),
             "repository_root": str(repository_root.resolve()),
-            "real_provider_configured": bool(
-                os.environ.get("OPENAI_API_KEY") and os.environ.get("OPENAI_MODEL")
-            ),
+            "real_provider_configured": configuration_check()["configured"],
             "default_provider": "fake",
             "sandbox": "application-boundary; trusted-repository-code only",
         }
